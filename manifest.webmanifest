@@ -1,0 +1,18 @@
+{
+  "name": "PROMOVA AI \u2014 Content Studio",
+  "short_name": "PROMOVA AI",
+  "description": "AI Content Production Studio",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6fa",
+  "theme_color": "#101426",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

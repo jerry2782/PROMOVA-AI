@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101426">
+  <meta name="description" content="PROMOVA AI — AI Content Production Studio">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>PROMOVA AI — Content Studio</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" data-page="dashboard">
+        <span class="brand-mark">P</span>
+        <span><b>PROMOVA</b><small>AI CONTENT STUDIO</small></span>
+      </a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav id="side-nav">
+        <button class="nav-item active" data-page="dashboard"><span>⌂</span> Dashboard</button>
+        <button class="nav-item" data-page="create"><span>✦</span> Create Content</button>
+        <button class="nav-item" data-page="analyzer"><span>◈</span> Product Analyzer</button>
+        <button class="nav-item" data-page="video"><span>▶</span> Video Studio</button>
+        <button class="nav-item" data-page="prompt"><span>⌘</span> Prompt Studio</button>
+        <button class="nav-item" data-page="projects"><span>▤</span> My Projects</button>
+        <button class="nav-item" data-page="publishing"><span>↗</span> Publishing Kit</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="offline-card"><span class="online-dot"></span><div><b>Local workspace</b><small>Data tersimpan di perangkat</small></div></div>
+        <button class="nav-item" data-page="settings"><span>⚙</span> Settings</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-brand" data-page="dashboard"><span class="brand-mark">P</span><b>PROMOVA AI</b></button>
+        <div class="topbar-right"><span class="status-pill"><i></i> Workspace aktif</span><button class="avatar" aria-label="Profil">E</button></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">YOUR CREATIVE WORKSPACE</span>
+            <h1>Ubah ide menjadi<br><em>konten yang menjual.</em></h1>
+            <p>Bangun konten promosi produk, film, layanan, dan apa pun — dari satu studio.</p>
+            <button class="primary-btn" data-page="create">✦ Mulai buat konten <span>→</span></button>
+          </div>
+          <div class="hero-art"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="orbit"></div><div class="hero-p">P</div><span class="float-tag tag-a">CONTENT</span><span class="float-tag tag-b">CREATIVE AI</span></div>
+        </div>
+        <div class="section-heading"><div><span class="eyebrow">QUICK START</span><h2>Apa yang ingin kamu buat?</h2></div></div>
+        <div class="quick-grid">
+          <button class="quick-card" data-page="create"><span class="quick-icon blue">✦</span><b>Konten Promosi</b><small>Caption, copywriting & hook</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="video"><span class="quick-icon purple">▶</span><b>Video Affiliate</b><small>Script, scene & storyboard</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="prompt"><span class="quick-icon cyan">⌘</span><b>AI Image & Video Prompt</b><small>Prompt siap digunakan</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="analyzer"><span class="quick-icon orange">◈</span><b>Analisis Produk</b><small>Temukan sudut promosi</small><span class="card-arrow">↗</span></button>
+        </div>
+        <div class="section-heading recent-heading"><div><span class="eyebrow">YOUR WORK</span><h2>Proyek terbaru</h2></div><button class="text-btn" data-page="projects">Lihat semua →</button></div>
+        <div id="recent-projects" class="project-grid"></div>
+        <div class="notice"><span>✦</span><div><b>Studio kreatif, kendali tetap di tanganmu.</b><small>PROMOVA menyusun konsep dan prompt. Kamu memilih AI, memeriksa fakta, lalu menyetujui konten sebelum dipublikasikan.</small></div></div>
+      </section>
+
+      <section class="page" id="page-create">
+        <div class="page-intro"><span class="eyebrow">CONTENT PRODUCTION</span><h1>Create <em>Content</em></h1><p>Buat materi promosi dari produk, film, layanan, atau ide apa pun.</p></div>
+        <div class="studio-layout">
+          <form id="content-form" class="form-panel">
+            <div class="panel-title"><span class="step-number">01</span><div><b>Informasi konten</b><small>Kenali apa yang ingin kamu promosikan</small></div></div>
+            <label>Jenis objek</label>
+            <select id="content-type"><option>Produk fisik</option><option>Produk digital</option><option>Film / hiburan</option><option>Travel / wisata</option><option>Jasa / layanan</option><option>Event / musik</option><option>Lainnya</option></select>
+            <label>Nama produk / objek <span class="required">*</span></label>
+            <input id="content-name" required placeholder="Contoh: Earbuds wireless X">
+            <label>Deskripsi dan informasi penting</label>
+            <textarea id="content-desc" rows="4" placeholder="Tuliskan fitur, manfaat, harga, keunggulan, tanggal tayang, atau informasi yang sudah kamu verifikasi..."></textarea>
+            <label>Target audiens</label>
+            <input id="content-audience" placeholder="Contoh: pekerja muda, mahasiswa, pecinta film">
+            <label>Tujuan konten</label>
+            <select id="content-goal"><option>Penjualan / affiliate</option><option>Brand awareness</option><option>Review dan rekomendasi</option><option>Engagement</option><option>Informasi / edukasi</option><option>Ajakan berkunjung</option></select>
+            <label>Platform publikasi</label>
+            <select id="content-platform"><option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>Facebook</option><option>WhatsApp</option><option>YouTube</option><option>Multi-platform</option></select>
+            <label>Gaya komunikasi</label>
+            <select id="content-tone"><option>Persuasif dan menjual</option><option>Santai dan bersahabat</option><option>Review jujur dan informatif</option><option>Storytelling</option><option>Profesional</option><option>Humoris</option><option>Cinematic</option></select>
+            <label>Bahasa hasil</label>
+            <select id="content-language"><option>Bahasa Indonesia</option><option>English</option><option>Bahasa Indonesia + English</option></select>
+            <label class="check-row"><input id="affiliate-disclosure" type="checkbox" checked> Sertakan pengungkapan konten afiliasi / promosi berbayar bila relevan</label>
+            <button class="primary-btn full" type="submit">✦ Buat content brief & prompt</button>
+          </form>
+          <div class="output-panel">
+            <div class="panel-title"><span class="step-number">02</span><div><b>Hasil produksi</b><small>Brief dan prompt siap digunakan</small></div></div>
+            <div id="content-empty" class="empty-state"><div class="empty-icon">✦</div><b>Studio siap digunakan</b><p>Lengkapi informasi di sebelah kiri, lalu buat brief konten.</p></div>
+            <div id="content-output" class="output-content hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-analyzer">
+        <div class="page-intro"><span class="eyebrow">RESEARCH & POSITIONING</span><h1>Product <em>Analyzer</em></h1><p>Susun analisis awal dan temukan sudut promosi dari informasi yang kamu masukkan.</p></div>
+        <div class="form-panel narrow">
+          <label>Nama produk / objek</label><input id="an-name" placeholder="Nama produk, film, jasa, atau tempat">
+          <label>Fakta / informasi yang diketahui</label><textarea id="an-facts" rows="5" placeholder="Masukkan spesifikasi, manfaat, harga, fitur, sinopsis resmi, atau informasi yang sudah diperiksa."></textarea>
+          <label>Target audiens</label><input id="an-audience" placeholder="Siapa yang paling mungkin tertarik?">
+          <button id="analyze-btn" class="primary-btn full">✦ Susun analisis promosi</button>
+          <div id="an-output" class="result-box hidden"></div>
+          <p class="helper">Analisis ini merupakan kerangka ide berdasarkan input pengguna, bukan verifikasi fakta atau ulasan independen.</p>
+        </div>
+      </section>
+
+      <section class="page" id="page-video">
+        <div class="page-intro"><span class="eyebrow">VIDEO PRODUCTION</span><h1>Video <em>Studio</em></h1><p>Susun naskah video pendek untuk affiliate, review, film, produk, dan promosi layanan.</p></div>
+        <div class="form-panel narrow">
+          <label>Nama produk / topik</label><input id="vid-name" placeholder="Nama produk atau topik video">
+          <label>Konsep video</label><select id="vid-style"><option>Soft selling</option><option>Hard selling</option><option>Problem – solution</option><option>Review jujur</option><option>Storytelling</option><option>Film recommendation</option><option>Cinematic advertisement</option></select>
+          <label>Durasi</label><select id="vid-duration"><option>15 detik</option><option selected>30 detik</option><option>45 detik</option><option>60 detik</option><option>90 detik</option><option>3 menit</option></select>
+          <label>Informasi utama</label><textarea id="vid-info" rows="3" placeholder="Fakta produk, manfaat, pesan utama, atau detail cerita..."></textarea>
+          <button id="video-btn" class="primary-btn full">✦ Buat video script</button>
+          <div id="video-output" class="result-box hidden"></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-prompt">
+        <div class="page-intro"><span class="eyebrow">AI CREATIVE PROMPTS</span><h1>Prompt <em>Studio</em></h1><p>Siapkan prompt visual untuk digunakan di layanan AI pilihanmu.</p></div>
+        <div class="form-panel narrow">
+          <label>Nama objek / produk</label><input id="pr-name" placeholder="Contoh: botol parfum premium">
+          <label>Jenis visual</label><select id="pr-kind"><option>Product photography</option><option>Affiliate video advertisement</option><option>Social media poster</option><option>Cinematic film poster</option><option>Lifestyle photography</option><option>Travel promotion</option></select>
+          <label>Gaya visual</label><select id="pr-style"><option>Photorealistic commercial</option><option>Cinematic luxury</option><option>Minimalist studio</option><option>Modern lifestyle</option><option>Vibrant social media</option><option>Documentary natural</option></select>
+          <label>Detail visual / latar</label><textarea id="pr-details" rows="3" placeholder="Warna, suasana, lokasi, pencahayaan, komposisi, dan detail penting..."></textarea>
+          <label>Format</label><select id="pr-ratio"><option>Vertical 9:16</option><option>Square 1:1</option><option>Landscape 16:9</option><option>Portrait 4:5</option></select>
+          <button id="prompt-btn" class="primary-btn full">✦ Generate visual prompt</button>
+          <div id="prompt-output" class="result-box hidden"></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-projects">
+        <div class="page-intro split-intro"><div><span class="eyebrow">YOUR WORKSPACE</span><h1>My <em>Projects</em></h1><p>Semua proyek yang tersimpan di perangkat ini.</p></div><button class="secondary-btn" id="new-project">＋ Proyek baru</button></div>
+        <div id="all-projects" class="project-grid"></div>
+        <div id="projects-empty" class="empty-state"><div class="empty-icon">▤</div><b>Belum ada proyek</b><p>Mulai buat konten untuk menyimpan proyek pertamamu.</p><button class="primary-btn" data-page="create">Mulai membuat konten</button></div>
+      </section>
+
+      <section class="page" id="page-publishing">
+        <div class="page-intro"><span class="eyebrow">READY TO PUBLISH</span><h1>Publishing <em>Kit</em></h1><p>Kumpulkan caption, CTA, hashtag, dan tautan afiliasi sebelum publikasi.</p></div>
+        <div class="form-panel narrow">
+          <label>Nama kampanye / produk</label><input id="pub-name" placeholder="Nama produk atau kampanye">
+          <label>Caption</label><textarea id="pub-caption" rows="5" placeholder="Tempel caption yang sudah disiapkan..."></textarea>
+          <label>CTA</label><input id="pub-cta" placeholder="Contoh: Cek detail produk melalui tautan berikut">
+          <label>Link afiliasi / tujuan</label><input id="pub-link" type="url" placeholder="https://...">
+          <label>Hashtag</label><input id="pub-tags" placeholder="#rekomendasi #reviewproduk">
+          <label class="check-row"><input id="pub-disclosure" type="checkbox" checked> Saya sudah menambahkan pengungkapan afiliasi / promosi jika diperlukan</label>
+          <button id="pub-copy" class="primary-btn full">Salin publishing kit</button>
+          <p class="helper">Periksa tautan, harga, klaim, hak penggunaan materi, dan ketentuan platform sebelum menerbitkan.</p>
+        </div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="page-intro"><span class="eyebrow">PREFERENCES & DATA</span><h1>Settings</h1><p>Kelola profil kreator dan cadangan data lokal.</p></div>
+        <div class="settings-grid">
+          <div class="form-panel">
+            <h3>Profil kreator</h3><label>Nama / brand</label><input id="setting-brand" placeholder="Nama brand atau kreator"><label>Deskripsi singkat</label><textarea id="setting-bio" rows="3" placeholder="Ceritakan fokus kontenmu..."></textarea><button id="save-settings" class="secondary-btn">Simpan profil</button>
+          </div>
+          <div class="form-panel">
+            <h3>Backup data</h3><p class="muted">Ekspor proyek dan pengaturan sebagai file JSON. Simpan backup secara berkala.</p><button id="export-data" class="primary-btn full">↓ Export backup JSON</button><label class="file-label">Import backup JSON<input id="import-data" type="file" accept=".json,application/json"></label><button id="clear-data" class="danger-btn full">Hapus semua data lokal</button>
+          </div>
+        </div>
+        <div class="notice"><span>ⓘ</span><div><b>Penyimpanan lokal</b><small>Data berada di browser/perangkat ini. Menghapus data browser atau mengganti perangkat dapat menghilangkan proyek jika belum diekspor.</small></div></div>
+        <div class="version">PROMOVA AI • MVP 1.0.0 • Local-first PWA</div>
+      </section>
+
+      <footer class="footer">PROMOVA AI <span>•</span> Create responsibly. Promote transparently.</footer>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Navigasi utama">
+    <button class="active" data-page="dashboard"><span>⌂</span><small>Home</small></button>
+    <button data-page="create"><span>✦</span><small>Create</small></button>
+    <button data-page="video"><span>▶</span><small>Video</small></button>
+    <button data-page="projects"><span>▤</span><small>Projects</small></button>
+    <button data-page="settings"><span>⚙</span><small>Settings</small></button>
+  </nav>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
