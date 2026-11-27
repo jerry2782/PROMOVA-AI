@@ -189,6 +189,23 @@
         <div id="pub-checklist" class="form-panel narrow"><h3>Checklist publikasi</h3><label class="check-row"><input type="checkbox"> Semua klaim sesuai fakta terverifikasi</label><label class="check-row"><input type="checkbox"> Harga, stok, dan tautan sudah diperiksa</label><label class="check-row"><input type="checkbox"> Foto, musik, dan video memiliki hak penggunaan</label><label class="check-row"><input type="checkbox"> Disclosure afiliasi / promosi sudah dicantumkan bila relevan</label><label class="check-row"><input type="checkbox"> Format dan ketentuan platform sudah diperiksa</label></div>
       </section>
 
+      <section class="page" id="page-external">
+        <div class="page-intro"><span class="eyebrow">EXTERNAL AI WORKFLOW</span><h1>AI External <em>Studio</em></h1><p>Pilih proyek, siapkan prompt, lalu lanjutkan produksi di layanan AI eksternal pilihanmu.</p></div>
+        <div class="form-panel narrow">
+          <div class="panel-title"><span class="step-number">01</span><div><b>Pilih proyek dan materi</b><small>Ambil prompt dari proyek yang sudah tersimpan</small></div></div>
+          <label>Proyek produksi</label><select id="external-project"><option value="">Pilih proyek tersimpan...</option></select>
+          <label>Jenis materi</label><select id="external-kind"><option value="master">Master Content Production Prompt</option><option value="image">Image Generation Prompt</option><option value="video">Video Generation Prompt</option><option value="publishing">Publishing Kit</option><option value="all">Seluruh paket produksi</option></select>
+          <button class="secondary-btn full" id="external-load" type="button">Muat prompt dari proyek</button>
+          <label>Prompt / materi (bisa diedit)</label><textarea id="external-prompt" rows="12" placeholder="Pilih proyek lalu muat prompt. Kamu juga bisa menempelkan prompt sendiri."></textarea>
+          <div class="notice"><span>ⓘ</span><div><b>Gunakan foto referensi</b><small>Jika proyek memiliki foto referensi, unduh atau buka fotonya dari Production Workspace, lalu lampirkan secara manual di layanan AI eksternal. PROMOVA tidak mengirim file secara otomatis.</small></div></div>
+          <div class="panel-title external-step"><span class="step-number">02</span><div><b>Pilih layanan AI</b><small>Layanan dibuka di tab baru; prompt tetap bisa disalin dari PROMOVA</small></div></div>
+          <label>Kategori produksi</label><select id="external-category"><option value="text">Teks & strategi</option><option value="image">Generate gambar</option><option value="video">Generate video</option></select>
+          <label>Layanan AI</label><select id="external-provider"></select>
+          <div class="external-actions"><button class="primary-btn" id="external-copy" type="button">Salin prompt</button><button class="secondary-btn" id="external-open" type="button">Buka layanan AI ↗</button></div>
+          <p class="helper">PROMOVA menggunakan metode external. Tidak ada API key yang disimpan dan tidak ada biaya layanan AI yang diproses di aplikasi ini. Periksa syarat, privasi, dan biaya pada penyedia masing-masing.</p>
+        </div>
+      </section>
+
       <section class="page" id="page-styles">
         <div class="page-intro"><span class="eyebrow">CREATIVE STYLE COLLECTION</span><h1>Styles <em>Library</em></h1><p>Pilih arahan visual untuk membantu PROMOVA menyusun prompt yang konsisten.</p></div>
         <div class="style-library-grid">
@@ -245,9 +262,11 @@
     <button data-page="styles"><span>✦</span> Styles Library</button>
     <button data-page="workspace"><span>▣</span> Production Workspace</button>
     <button data-page="publishing"><span>↗</span> Publishing Kit</button>
+    <button data-page="external"><span>✧</span> AI External Studio</button>
+    <button data-page="external"><span>✧</span> AI External Studio</button>
     <button data-page="settings"><span>⚙</span> Settings</button>
   </div>
   <div id="toast" class="toast" role="status"></div>
-  <script src="app.js?v=1.5.0"></script>
+  <script src="app.js?v=1.6.0"></script>
 </body>
 </html>
