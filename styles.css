@@ -111,3 +111,21 @@ input:focus,textarea:focus,select:focus{border-color:#a879ed;box-shadow:0 0 0 3p
 .style-anime{background:linear-gradient(145deg,#372b79,#bd5c9e 55%,#f4adbd)}
 .style-3d{background:linear-gradient(145deg,#173e55,#436b90 50%,#a17ac6)}
 @media(min-width:700px){.style-library-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.style-art{height:145px}}
+
+/* PROMOVA AI V1.4 Production Workspace */
+.workspace-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0 25px}
+.workspace-stat{padding:13px 10px;border:1px solid var(--line);border-radius:14px;background:var(--white);display:flex;flex-direction:column;gap:6px}
+.workspace-stat small{font-size:8px;letter-spacing:1px;color:var(--muted);font-weight:700}
+.workspace-stat b{font-size:23px;color:var(--ink)}
+.workspace-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 14px}
+.workspace-toolbar>div{display:flex;flex-direction:column;gap:4px}.workspace-toolbar b{font-size:15px}.workspace-toolbar small{font-size:10px;color:var(--muted);line-height:1.4}
+.workspace-projects{display:grid;gap:12px;margin-bottom:20px}
+.workspace-card{padding:15px;border:1px solid var(--line);border-radius:17px;background:var(--white)}
+.workspace-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.workspace-type{font-size:8px;letter-spacing:1px;color:#c49aff;font-weight:800}
+.workspace-status{font-size:9px;border-radius:999px;padding:5px 9px;background:#39234c;color:#dfc2ff}
+.workspace-card h3{font-size:16px;margin:12px 0 5px}.workspace-card p{font-size:11px;color:var(--muted);margin:0 0 12px}
+.workspace-assets{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 14px}
+.workspace-assets span{font-size:9px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;color:var(--muted)}
+.workspace-actions{display:flex;gap:8px;flex-wrap:wrap}
+.workspace-actions .mini-btn{background:#39234c;color:#eadbff;border:1px solid #63427f}
