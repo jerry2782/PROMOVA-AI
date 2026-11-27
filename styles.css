@@ -237,3 +237,6 @@ input:focus,textarea:focus,select:focus{border-color:#a879ed;box-shadow:0 0 0 3p
 .director-v2-approval{display:flex;align-items:flex-start;gap:8px;font-size:10px;line-height:1.5;color:#d5c8e4}
 .director-v2-approval input{accent-color:#a855f7;margin-top:2px}
 @media(max-width:420px){.director-v2-actions{flex-direction:column}.director-v2-actions button{width:100%}.director-v2-card-actions{grid-template-columns:1fr}}
+
+/* Director 2.1 sequential First Frame handoff */
+.v2-frame-handoff{border:1px dashed #76559a;background:#211633;border-radius:12px;padding:12px;margin:12px 0}.v2-frame-handoff label{margin:0 0 8px}.v2-frame-handoff input{font-size:11px}.v2-frame-handoff small{display:block;color:#b7a8cb;font-size:10px;line-height:1.5;margin-top:7px}.v2-frame-preview{display:block;width:100%;max-width:240px;max-height:180px;object-fit:contain;border-radius:9px;margin-top:10px;border:1px solid #553b70}
