@@ -1,4 +1,4 @@
-/* PROMOVA AI — Movie Poster Promo Studio 2.3 — Character Library Sync */
+/* PROMOVA AI — Movie Poster Promo Studio 2.4 — Character Source Modes */
 (()=>{"use strict";
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const nav=$("side-nav"),more=$("more-menu"),main=document.querySelector(".main");if(!main||window.__mpStudioInitialized)return;window.__mpStudioInitialized=true;
@@ -28,19 +28,34 @@ if(!list.length){select.innerHTML='<option value="">Belum ada karakter tersimpan
 }
 $("mp-character").addEventListener("focus",refreshChars);
 $("mp-character").addEventListener("click",refreshChars);
-function source(){const s=$("mp-character-source").value;$("mp-library-wrap").classList.toggle("hidden",s!=="library");$("mp-upload-wrap").classList.toggle("hidden",s==="library");refreshChars()}
-$("mp-character-source").addEventListener("change",source);
+function source(){
+const mode=$("mp-character-source").value;
+const library=$("mp-library-wrap"),upload=$("mp-upload-wrap");
+const showLibrary=mode==="library",showUpload=mode==="upload"||mode==="mascot";
+library.classList.toggle("hidden",!showLibrary);
+upload.classList.toggle("hidden",!showUpload);
+library.style.display=showLibrary?"block":"none";
+upload.style.display=showUpload?"block":"none";
+const uploadLabel=upload.querySelector("label");
+if(uploadLabel)uploadLabel.textContent=mode==="mascot"?"Upload gambar maskot perusahaan":"Upload foto / gambar karakter";
+const helper=library.querySelector(".helper");
+if(helper)helper.textContent="Karakter diambil dari Character DNA Studio pada perangkat/browser yang sama.";
+if(showLibrary)refreshChars();
+}
+$("mp-character-source").onchange=source;
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="mp-character-source")source()},true);
 $("mp-logo").addEventListener("change",async e=>{try{logoData=await compress(e.target.files[0]);prev($("mp-logo-preview"),logoData,"Logo perusahaan")}catch(x){toast(x.message)}});
 $("mp-character-file").addEventListener("change",async e=>{try{characterData=await compress(e.target.files[0]);prev($("mp-character-preview"),characterData,"Referensi karakter")}catch(x){toast(x.message)}});
 $("mp-add-poster").addEventListener("click",()=>addPoster());
 $("mp-posters").addEventListener("click",e=>{if(e.target.closest("[data-remove]"))e.target.closest(".mp-poster").remove()});
 $("mp-posters").addEventListener("change",async e=>{if(!e.target.matches("[data-file]"))return;const c=e.target.closest(".mp-poster");try{c._image=await compress(e.target.files[0],1800);prev(c.querySelector("[data-preview]"),c._image,"Poster referensi")}catch(x){toast(x.message)}});
-function chosen(){const s=$("mp-character-source").value;if(s!=="library")return {name:$("mp-character-name").value.trim()||(s==="mascot"?"Company Mascot":"Uploaded Presenter"),dna:"Use the uploaded character image as the primary identity reference. Preserve exact face or mascot design, proportions, colors, costume and recognizable details. Do not redesign or substitute.",imageData:characterData};const c=chars().find(x=>x.id===$("mp-character").value);return c?{name:c.name,dna:typeof characterDNAText==="function"?characterDNAText(c):[c.name,c.role,c.age,c.appearance,c.personality].filter(Boolean).join(". "),imageData:c.masterSheetData||c.photoData||""}:{name:"Presenter belum dipilih",dna:"No approved character selected. Do not invent an existing character.",imageData:""}}
+function chosen(){const s=$("mp-character-source").value;if(s!=="library")return {name:$("mp-character-name").value.trim()||(s==="mascot"?"SAMS Studio Mascot":"Uploaded Presenter"),dna:s==="mascot"?"Use the uploaded official company mascot image as the exact identity reference. Preserve its silhouette, face, colors, costume, proportions and all recognizable brand details. Do not redesign, replace or add branding.":"Use the uploaded character image as the primary identity reference. Preserve exact face, proportions, colors, costume and recognizable details. Do not redesign or substitute.",imageData:characterData};const c=chars().find(x=>x.id===$("mp-character").value);return c?{name:c.name,dna:typeof characterDNAText==="function"?characterDNAText(c):[c.name,c.role,c.age,c.appearance,c.personality].filter(Boolean).join(". "),imageData:c.masterSheetData||c.photoData||""}:{name:"Presenter belum dipilih",dna:"No approved character selected. Do not invent an existing character.",imageData:""}}
 function generate(){
 const p=posters(),brand=$("mp-brand").value.trim()||"[NAMA BIOSKOP]",ch=chosen(),dur=20+p.length*10,ratio=$("mp-ratio").value,cta=$("mp-cta").value.trim()||"Ayo nonton sekarang";
 if(!p.length||p.some(x=>!x.title)){toast("Tambahkan poster dan isi semua judul film.");return}
 if(p.some(x=>!x.imageData)){toast("Upload poster resmi untuk setiap film.");return}
-if($("mp-character-source").value==="library"&&!$("mp-character").value){toast("Pilih karakter dari Character Library.");return}
+if($("mp-character-source").value==="library"&&!$("mp-character").value){toast("Pilih karakter dari Character Library. Jika daftar kosong, buka Character DNA Studio di browser yang sama.");return}
+if($("mp-character-source").value!=="library"&&!characterData){toast($("mp-character-source").value==="mascot"?"Upload gambar Company Mascot terlebih dahulu.":"Upload gambar karakter terlebih dahulu.");return}
 if(!logoData){toast("Upload logo perusahaan terlebih dahulu.");return}
 const opening=10,closing=10,remaining=dur-opening-closing;
 if(remaining<p.length){toast("Durasi terlalu pendek untuk jumlah poster.");return}
