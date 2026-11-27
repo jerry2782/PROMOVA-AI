@@ -1,4 +1,4 @@
-/* PROMOVA AI — Movie Poster Promo Studio 2.2 — Fixed 10s Segments */
+/* PROMOVA AI — Movie Poster Promo Studio 2.3 — Character Library Sync */
 (()=>{"use strict";
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const nav=$("side-nav"),more=$("more-menu"),main=document.querySelector(".main");if(!main||window.__mpStudioInitialized)return;window.__mpStudioInitialized=true;
@@ -13,8 +13,21 @@ function prev(el,data,label){el.innerHTML=data?'<img src="'+data+'" alt="Preview
 function addPoster(d={}){const c=document.createElement("article");c.className="mp-poster";c.innerHTML='<div class="mp-poster-head"><b>POSTER FILM '+String(++seq).padStart(2,"0")+'</b><button type="button" class="mp-remove" data-remove>Hapus</button></div><label>Upload poster resmi</label><input type="file" accept="image/*" data-file><div class="mp-preview" data-preview>Belum ada poster</div><label>Judul film</label><input data-title placeholder="Judul film"><label>Tanggal tayang</label><input type="date" data-date><label>Jam tayang (pisahkan koma)</label><input data-times placeholder="13:00, 15:30, 19:00"><label>Catatan tambahan (opsional)</label><input data-note placeholder="Studio / format khusus">';$("mp-posters").append(c);c._image=d.imageData||"";c.querySelector("[data-title]").value=d.title||"";c.querySelector("[data-date]").value=d.date||"";c.querySelector("[data-times]").value=d.times||"";c.querySelector("[data-note]").value=d.note||"";if(c._image)prev(c.querySelector("[data-preview]"),c._image,"Poster tersimpan")}
 function posters(){return [...document.querySelectorAll(".mp-poster")].map(c=>({imageData:c._image||"",title:c.querySelector("[data-title]").value.trim(),date:c.querySelector("[data-date]").value,times:c.querySelector("[data-times]").value.trim(),note:c.querySelector("[data-note]").value.trim()}))}
 function dateText(v){return v?new Date(v+"T00:00:00").toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}):"[TANGGAL BELUM DIISI]"}
-function chars(){return Array.isArray(window.characters)?window.characters:(typeof characters!=="undefined"?characters:[])}
-function refreshChars(){ $("mp-character").innerHTML='<option value="">Pilih karakter...</option>'+chars().map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("")}
+function chars(){
+try{
+if(typeof loadCharacters==="function"){const stored=loadCharacters();if(Array.isArray(stored))return stored;}
+const stored=JSON.parse(localStorage.getItem("promova_ai_characters_v1")||"[]");
+return Array.isArray(stored)?stored:[];
+}catch(e){console.warn("Character Library read failed",e);return[]}
+}
+function refreshChars(){
+const select=$("mp-character"),current=select.value,list=chars();
+select.innerHTML='<option value="">Pilih karakter...</option>'+list.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
+if(list.some(c=>String(c.id)===current))select.value=current;
+if(!list.length){select.innerHTML='<option value="">Belum ada karakter tersimpan — buka Character DNA Studio</option>';}
+}
+$("mp-character").addEventListener("focus",refreshChars);
+$("mp-character").addEventListener("click",refreshChars);
 function source(){const s=$("mp-character-source").value;$("mp-library-wrap").classList.toggle("hidden",s!=="library");$("mp-upload-wrap").classList.toggle("hidden",s==="library");refreshChars()}
 $("mp-character-source").addEventListener("change",source);
 $("mp-logo").addEventListener("change",async e=>{try{logoData=await compress(e.target.files[0]);prev($("mp-logo-preview"),logoData,"Logo perusahaan")}catch(x){toast(x.message)}});
