@@ -16,34 +16,37 @@ function posters(){return [...document.querySelectorAll(".mp-poster")].map(c=>({
 function dateText(v){return v?new Date(v+"T00:00:00").toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}):"[TANGGAL BELUM DIISI]"}
 function chars(){
 try{
-if(typeof loadCharacters==="function"){const stored=loadCharacters();if(Array.isArray(stored))return stored;}
-const stored=JSON.parse(localStorage.getItem("promova_ai_characters_v1")||"[]");
-return Array.isArray(stored)?stored:[];
+const raw=localStorage.getItem("promova_ai_characters_v1");
+const local=raw?JSON.parse(raw):[];
+if(Array.isArray(local)&&local.length)return local;
+if(typeof loadCharacters==="function"){const stored=loadCharacters();if(Array.isArray(stored)&&stored.length)return stored;}
+return Array.isArray(local)?local:[];
 }catch(e){console.warn("Character Library read failed",e);return[]}
 }
 function refreshChars(){
-const select=$("mp-character"),current=select.value,list=chars();
-select.innerHTML='<option value="">Pilih karakter...</option>'+list.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join("");
+const select=$("mp-character");if(!select)return;
+const current=select.value,list=chars();
+select.replaceChildren();
+const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent=list.length?"Pilih karakter...":"Belum ada karakter tersimpan — buka Character DNA Studio";select.append(placeholder);
+list.forEach(c=>{if(!c||!c.id)return;const option=document.createElement("option");option.value=String(c.id);option.textContent=String(c.name||"Karakter tanpa nama");select.append(option)});
 if(list.some(c=>String(c.id)===current))select.value=current;
-if(!list.length){select.innerHTML='<option value="">Belum ada karakter tersimpan — buka Character DNA Studio</option>';}
 }
-$("mp-character").addEventListener("focus",refreshChars);
-$("mp-character").addEventListener("click",refreshChars);
 function source(){
-const mode=$("mp-character-source").value;
+const select=$("mp-character-source"),mode=select?.value||"library";
 const library=$("mp-library-wrap"),upload=$("mp-upload-wrap");
 const showLibrary=mode==="library",showUpload=mode==="upload"||mode==="mascot";
-library.classList.toggle("hidden",!showLibrary);upload.classList.toggle("hidden",!showUpload);
-library.style.setProperty("display",showLibrary?"block":"none","important");
-upload.style.setProperty("display",showUpload?"block":"none","important");
-const uploadLabel=upload.querySelector("label");
-if(uploadLabel)uploadLabel.textContent=mode==="mascot"?"Upload gambar maskot perusahaan":"Upload foto / gambar karakter";
-const file=$("mp-character-file");file.setAttribute("accept","image/*");
-document.querySelectorAll("[data-mp-source]").forEach(b=>b.classList.toggle("active",b.dataset.mpSource===mode));
+if(library){library.classList.toggle("hidden",!showLibrary);library.style.display=showLibrary?"block":"none";}
+if(upload){upload.classList.toggle("hidden",!showUpload);upload.style.display=showUpload?"block":"none";}
+const uploadLabel=upload?.querySelector("label");if(uploadLabel)uploadLabel.textContent=mode==="mascot"?"Upload gambar maskot perusahaan":"Upload foto / gambar karakter";
 if(showLibrary)refreshChars();
 }
 window.mpUpdateCharacterSource=source;
-$("mp-character-source").addEventListener("change",source);
+const sourceSelect=$("mp-character-source");
+if(sourceSelect){sourceSelect.addEventListener("change",source);sourceSelect.addEventListener("input",source);sourceSelect.onchange=source;sourceSelect.oninput=source;}
+$("mp-character")?.addEventListener("focus",refreshChars);
+$("mp-character")?.addEventListener("click",refreshChars);
+document.addEventListener("change",e=>{if(e.target?.id==="mp-character-source")source();if(e.target?.id==="mp-character")refreshChosenCharacterPreview()});
+function refreshChosenCharacterPreview(){const c=chars().find(x=>String(x.id)===$("mp-character")?.value);if(c){const data=c.masterSheetData||c.photoData||"";if(data)prev($("mp-character-preview"),data,"Referensi karakter: "+c.name)}}
 $("mp-logo").addEventListener("change",async e=>{try{logoData=await compress(e.target.files[0]);prev($("mp-logo-preview"),logoData,"Logo perusahaan")}catch(x){toast(x.message)}});
 $("mp-character-file").addEventListener("change",async e=>{try{characterData=await compress(e.target.files[0]);prev($("mp-character-preview"),characterData,"Referensi karakter")}catch(x){toast(x.message)}});
 $("mp-add-poster").addEventListener("click",()=>addPoster());
@@ -87,5 +90,5 @@ $("mp-output").dataset.all=all;$("mp-output").dataset.blocks=JSON.stringify(bloc
 }
 $("mp-generate").addEventListener("click",generate);
 $("mp-output").addEventListener("click",e=>{const b=e.target.closest("[data-mp-copy]");if(b){const a=JSON.parse($("mp-output").dataset.blocks||"[]");copyText(a[+b.dataset.mpCopy]?.[1]||"")}if(e.target.id==="mp-copy-all")copyText($("mp-output").dataset.all||"");if(e.target.id==="mp-save"){const d=window.__mpDraft;if(!d)return;try{const a=JSON.parse(localStorage.getItem("promova_ai_projects_v1")||"[]");a.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),title:"Movie Promo — "+d.brand,type:"Movie Poster Promo Pack",createdAt:new Date().toISOString(),content:d.prompts.map(x=>x[0]+"\n"+x[1]).join("\n\n"),moviePromo:d});localStorage.setItem("promova_ai_projects_v1",JSON.stringify(a));if(typeof renderProjects==="function")renderProjects();toast("Proyek Movie Poster Promo tersimpan.")}catch(x){toast("Penyimpanan gagal. Kurangi jumlah atau ukuran gambar.")}}});
-addPoster();source();
+addPoster();source();refreshChars();
 })();
