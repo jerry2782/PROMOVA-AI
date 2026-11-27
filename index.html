@@ -180,8 +180,15 @@
     <button data-page="create"><span>✦</span><small>Create</small></button>
     <button data-page="video"><span>▶</span><small>Video</small></button>
     <button data-page="projects"><span>▤</span><small>Projects</small></button>
-    <button data-page="settings"><span>⚙</span><small>Settings</small></button>
+    <button id="more-menu-toggle" type="button" aria-expanded="false"><span>•••</span><small>More</small></button>
   </nav>
+  <div class="more-menu hidden" id="more-menu">
+    <div class="more-menu-head"><b>Creative tools</b><button type="button" id="more-menu-close" aria-label="Tutup">×</button></div>
+    <button data-page="analyzer"><span>◈</span> Product Analyzer</button>
+    <button data-page="prompt"><span>⌘</span> Prompt Studio</button>
+    <button data-page="publishing"><span>↗</span> Publishing Kit</button>
+    <button data-page="settings"><span>⚙</span> Settings</button>
+  </div>
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js"></script>
 </body>
