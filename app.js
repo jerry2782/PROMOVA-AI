@@ -45,10 +45,19 @@ document.getElementById("all-projects").innerHTML=projects.map(card).join("");do
 document.addEventListener("click",e=>{const f=e.target.closest("[data-gallery-filter]");if(f){galleryFilter=f.dataset.galleryFilter;renderProjects()}});
 function renderWorkspace(){
  const list=projects.filter(p=>p.type==="Content Production Pack");
+ // Migrate older V1.3 packs by recovering their platform/style from the saved brief.
+ let migrated=false;
+ list.forEach(p=>{
+   const source=String(p.brief||p.content||"");
+   if(!p.platform){const m=source.match(/(?:Primary platform|Platform):\\s*([^\\n]+)/i);if(m){p.platform=m[1].trim();migrated=true}}
+   if(!p.style){const m=source.match(/(?:Visual style preset|Gaya visual):\\s*([^\\n]+)/i);if(m){p.style=m[1].trim();migrated=true}}
+   if(!p.productionStatus){p.productionStatus="Draft";migrated=true}
+ });
+ if(migrated)localStorage.setItem(DB_KEY,JSON.stringify(projects));
  const stats=[["TOTAL PAKET",list.length],["DENGAN REFERENSI",list.filter(p=>!!p.imageData).length],["SIAP PUBLIKASI",list.filter(p=>p.productionStatus==="Ready to publish").length]];
  document.getElementById("workspace-stats").innerHTML=stats.map(x=>`<div class="workspace-stat"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");
  const root=document.getElementById("workspace-projects");
- root.innerHTML=list.map(p=>`<article class="workspace-card"><div class="workspace-card-top"><span class="workspace-type">CONTENT PRODUCTION</span><span class="workspace-status">${esc(p.productionStatus||"Draft")}</span></div><h3>${esc(p.title)}</h3><p>${esc(p.platform||"Platform belum ditentukan")} · ${esc(p.style||"Style belum dipilih")}</p><div class="workspace-assets"><span>${p.imageData?"▧ Referensi tersedia":"＋ Tanpa referensi"}</span><span>✦ Brief & prompt</span><span>▤ Publishing kit</span></div><div class="workspace-actions"><button class="mini-btn" data-workspace-open="${esc(p.id)}">Buka paket</button><button class="mini-btn" data-workspace-status="${esc(p.id)}">${p.productionStatus==="Ready to publish"?"Tandai draft":"Siap publikasi"}</button></div></article>`).join("")||`<div class="gallery-empty"><div class="gallery-empty-icon">▣</div><b>Belum ada paket produksi</b><p>Buat Content Production Pack untuk mulai mengelola proyek di sini.</p><button class="primary-btn" data-page="create">＋ Buat proyek pertama</button></div>`;
+ root.innerHTML=list.map(p=>{const hasPublishingKit=String(p.content||"").includes("PUBLISHING KIT");return `<article class="workspace-card"><div class="workspace-card-top"><span class="workspace-type">CONTENT PRODUCTION</span><span class="workspace-status">${esc(p.productionStatus||"Draft")}</span></div><h3>${esc(p.title)}</h3><p>${esc(p.platform||"Platform belum ditentukan")} · ${esc(p.style||"Style belum dipilih")}</p><div class="workspace-assets"><span>${p.imageData?"▧ Referensi tersedia":"＋ Tanpa referensi"}</span><span>✦ Brief & prompt</span>${hasPublishingKit?"<span>▤ Publishing kit</span>":"<span>＋ Publishing kit belum tersedia</span>"}</div><div class="workspace-actions"><button class="mini-btn" data-workspace-open="${esc(p.id)}">Buka paket</button><button class="mini-btn" data-workspace-status="${esc(p.id)}">${p.productionStatus==="Ready to publish"?"Tandai draft":"Siap publikasi"}</button></div></article>`}).join("")||`<div class="gallery-empty"><div class="gallery-empty-icon">▣</div><b>Belum ada paket produksi</b><p>Buat Content Production Pack untuk mulai mengelola proyek di sini.</p><button class="primary-btn" data-page="create">＋ Buat proyek pertama</button></div>`;
 }
 document.getElementById("workspace-projects").addEventListener("click",e=>{
  const open=e.target.closest("[data-workspace-open]");if(open){const p=projects.find(x=>x.id===open.dataset.workspaceOpen);if(p){showProject(p);go("projects")}return}
