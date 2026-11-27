@@ -42,8 +42,10 @@ const helper=library.querySelector(".helper");
 if(helper)helper.textContent="Karakter diambil dari Character DNA Studio pada perangkat/browser yang sama.";
 if(showLibrary)refreshChars();
 }
-$("mp-character-source").onchange=source;
-document.addEventListener("change",e=>{if(e.target&&e.target.id==="mp-character-source")source()},true);
+window.mpUpdateCharacterSource=source;
+$("mp-character-source").addEventListener("change",source,true);
+$("mp-character-source").addEventListener("input",source,true);
+$("mp-character-source").addEventListener("blur",source,true);
 $("mp-logo").addEventListener("change",async e=>{try{logoData=await compress(e.target.files[0]);prev($("mp-logo-preview"),logoData,"Logo perusahaan")}catch(x){toast(x.message)}});
 $("mp-character-file").addEventListener("change",async e=>{try{characterData=await compress(e.target.files[0]);prev($("mp-character-preview"),characterData,"Referensi karakter")}catch(x){toast(x.message)}});
 $("mp-add-poster").addEventListener("click",()=>addPoster());
