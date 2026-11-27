@@ -111,7 +111,7 @@ function generatePublishingDraft(){
 function savePublishingKit(){
  const p=selectedPublishingProject();if(!p){toast("Pilih proyek terlebih dahulu");return}
  const kit=publishingText();p.publishingKit=kit;p.publishingUpdatedAt=new Date().toISOString();
- const marker="\\n\\nPUBLISHING KIT";const at=(p.content||"").indexOf(marker);p.content=(at>=0?p.content.slice(0,at):p.content||"").trim()+marker+"\\n"+kit;
+ const marker="\n\nPUBLISHING KIT";const at=(p.content||"").indexOf(marker);p.content=(at>=0?p.content.slice(0,at):p.content||"").trim()+marker+"\n"+kit;
  saveProjects();renderWorkspace();toast("Publishing Kit disimpan ke proyek");
 }
 document.getElementById("pub-load").addEventListener("click",()=>{const p=selectedPublishingProject();if(!p){toast("Pilih proyek terlebih dahulu");return}fillPublishingFromProject(p)});
