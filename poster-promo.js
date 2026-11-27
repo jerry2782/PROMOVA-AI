@@ -10,8 +10,8 @@ page.innerHTML='<div class="page-intro"><span class="eyebrow">CINEMA ADVERTISING
 const dir=$("page-director");main.insertBefore(page,dir||main.querySelector("footer"));
 const promoMenuItem=more?.querySelector('[data-page="movie-promo"]');
 promoMenuItem?.addEventListener("click",()=>{
- document.querySelectorAll(".page").forEach(el=>{el.classList.remove("active");el.style.display="none"});
- page.classList.add("active");page.style.display="block";
+ document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
+ page.classList.add("active");
  window.scrollTo({top:0,behavior:"smooth"});
 });
 
