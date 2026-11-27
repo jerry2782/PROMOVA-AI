@@ -7,7 +7,7 @@ const n=document.createElement("button");n.className="nav-item";n.dataset.page="
 const qg=document.querySelector(".quick-grid");if(qg){const q=document.createElement("button");q.className="quick-card";q.dataset.page="movie-promo";q.innerHTML='<span class="quick-icon purple">🎞</span><b>Movie Poster Promo</b><small>Poster film, jadwal tayang & presenter</small><span class="card-arrow">↗</span>';qg.append(q)}
 const page=$("page-movie-promo");if(!page){console.error("Movie Poster Promo static page missing");return;}
 const css=document.createElement("style");css.textContent='.movie-promo-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.9fr);gap:16px;align-items:start}.mp-preview{min-height:70px;border:1px dashed #72528e;border-radius:10px;padding:10px;margin-top:8px;color:var(--muted);font-size:11px;display:flex;align-items:center;gap:12px}.mp-preview img{max-width:105px;max-height:90px;object-fit:contain;border-radius:7px}.mp-poster{border:1px solid var(--line);background:#171022;border-radius:12px;padding:13px;margin:12px 0}.mp-poster-head{display:flex;justify-content:space-between;gap:8px}.mp-poster-head b{font-size:12px}.mp-remove{border:0;background:#3b1b2a;color:#ffb7c4;border-radius:8px;padding:7px 9px}.mp-poster img{max-width:100%;max-height:130px;object-fit:contain;display:block;margin:8px auto}.mp-schedule{border:1px solid var(--line);padding:12px;border-radius:10px;margin:10px 0}.mp-schedule b{font-size:12px}.mp-schedule p{font-size:11px;line-height:1.6;color:var(--muted)}.mp-badge{font-size:9px;color:#d8bcff;background:#302044;padding:5px 8px;border-radius:20px}@media(max-width:800px){.movie-promo-layout{grid-template-columns:1fr}}';document.head.append(css);
-const sourceStyle=document.createElement("style");sourceStyle.textContent='.mp-source-select{display:block;width:100%;min-height:50px;margin:10px 0 16px;padding:12px 42px 12px 14px;border:1px solid #654783;border-radius:12px;background:#171022;color:#f5efff;font:inherit;font-size:14px;line-height:1.4;color-scheme:dark}.mp-source-select:focus{outline:2px solid #a855f7;outline-offset:2px}.mp-source-select option{background:#171022;color:#f5efff}';document.head.append(sourceStyle);
+const sourceStyle=document.createElement("style");sourceStyle.textContent='.mp-source-select{display:block;width:100%;min-height:50px;margin:10px 0 16px;padding:12px 42px 12px 14px;border:1px solid #654783;border-radius:12px;background:#171022;color:#f5efff;font:inherit;font-size:14px;line-height:1.4;color-scheme:dark}.mp-source-select:focus{outline:2px solid #a855f7;outline-offset:2px}.mp-source-select option{background:#171022;color:#f5efff}';document.head.append(sourceStyle);const modeStyle=document.createElement('style');modeStyle.textContent='.mp-source-cards{display:grid;grid-template-columns:1fr;gap:9px;margin:10px 0 16px}.mp-source-card{width:100%;text-align:left;border:1px solid #493653;border-radius:12px;background:#171021;color:#f5efff;padding:13px 14px;display:flex;flex-direction:column;gap:5px}.mp-source-card b{font-size:12px}.mp-source-card small{font-size:10px;line-height:1.4;color:#bba9ca}.mp-source-card.active{border-color:#b34dff;background:#30203f;box-shadow:0 0 0 1px #b34dff33}.mp-source-card:focus-visible{outline:2px solid #c084fc;outline-offset:2px}';document.head.append(modeStyle);
 let logoData="",characterData="",seq=0;
 function compress(file,max=1400){return new Promise((resolve,reject)=>{if(!file||!file.type.startsWith("image/"))return reject(Error("Pilih file gambar."));const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const z=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*z);c.height=Math.round(im.height*z);c.getContext("2d").drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL("image/jpeg",.78))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
 function prev(el,data,label){el.innerHTML=data?'<img src="'+data+'" alt="Preview"><span>'+esc(label)+'</span>':"Belum ada gambar"}
@@ -20,6 +20,7 @@ const raw=localStorage.getItem("promova_ai_characters_v1");
 const local=raw?JSON.parse(raw):[];
 if(Array.isArray(local)&&local.length)return local;
 if(typeof loadCharacters==="function"){const stored=loadCharacters();if(Array.isArray(stored)&&stored.length)return stored;}
+if(typeof characters!=="undefined"&&Array.isArray(characters))return characters;
 return Array.isArray(local)?local:[];
 }catch(e){console.warn("Character Library read failed",e);return[]}
 }
@@ -27,25 +28,28 @@ function refreshChars(){
 const select=$("mp-character");if(!select)return;
 const current=select.value,list=chars();
 select.replaceChildren();
-const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent=list.length?"Pilih karakter...":"Belum ada karakter tersimpan — buka Character DNA Studio";select.append(placeholder);
+const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent=list.length?"Pilih karakter...":"Belum ada karakter tersimpan — periksa Character DNA Studio";select.append(placeholder);
 list.forEach(c=>{if(!c||!c.id)return;const option=document.createElement("option");option.value=String(c.id);option.textContent=String(c.name||"Karakter tanpa nama");select.append(option)});
 if(list.some(c=>String(c.id)===current))select.value=current;
+const status=$("mp-library-status");if(status)status.textContent=list.length?list.length+" karakter ditemukan di Character Library":"Tidak ada karakter ditemukan di penyimpanan perangkat ini.";
 }
-function source(){
-const select=$("mp-character-source"),mode=select?.value||"library";
+function source(mode){
+const select=$("mp-character-source");
+if(mode&&select)select.value=mode;
+const active=select?.value||"library";
 const library=$("mp-library-wrap"),upload=$("mp-upload-wrap");
-const showLibrary=mode==="library",showUpload=mode==="upload"||mode==="mascot";
+const showLibrary=active==="library",showUpload=active==="upload"||active==="mascot";
 if(library){library.classList.toggle("hidden",!showLibrary);library.style.display=showLibrary?"block":"none";}
 if(upload){upload.classList.toggle("hidden",!showUpload);upload.style.display=showUpload?"block":"none";}
-const uploadLabel=upload?.querySelector("label");if(uploadLabel)uploadLabel.textContent=mode==="mascot"?"Upload gambar maskot perusahaan":"Upload foto / gambar karakter";
+const uploadLabel=upload?.querySelector("label");if(uploadLabel)uploadLabel.textContent=active==="mascot"?"Upload gambar maskot perusahaan":"Upload foto / gambar karakter";
+document.querySelectorAll("[data-mp-mode]").forEach(btn=>{const on=btn.dataset.mpMode===active;btn.classList.toggle("active",on);btn.setAttribute("aria-pressed",String(on));});
 if(showLibrary)refreshChars();
 }
 window.mpUpdateCharacterSource=source;
-const sourceSelect=$("mp-character-source");
-if(sourceSelect){sourceSelect.addEventListener("change",source);sourceSelect.addEventListener("input",source);sourceSelect.onchange=source;sourceSelect.oninput=source;}
+document.addEventListener("click",e=>{const btn=e.target.closest("[data-mp-mode]");if(btn){e.preventDefault();source(btn.dataset.mpMode);}});
 $("mp-character")?.addEventListener("focus",refreshChars);
 $("mp-character")?.addEventListener("click",refreshChars);
-document.addEventListener("change",e=>{if(e.target?.id==="mp-character-source")source();if(e.target?.id==="mp-character")refreshChosenCharacterPreview()});
+$("mp-character")?.addEventListener("change",refreshChosenCharacterPreview);$("mp-refresh-characters")?.addEventListener("click",refreshChars);
 function refreshChosenCharacterPreview(){const c=chars().find(x=>String(x.id)===$("mp-character")?.value);if(c){const data=c.masterSheetData||c.photoData||"";if(data)prev($("mp-character-preview"),data,"Referensi karakter: "+c.name)}}
 $("mp-logo").addEventListener("change",async e=>{try{logoData=await compress(e.target.files[0]);prev($("mp-logo-preview"),logoData,"Logo perusahaan")}catch(x){toast(x.message)}});
 $("mp-character-file").addEventListener("change",async e=>{try{characterData=await compress(e.target.files[0]);prev($("mp-character-preview"),characterData,"Referensi karakter")}catch(x){toast(x.message)}});
@@ -90,5 +94,5 @@ $("mp-output").dataset.all=all;$("mp-output").dataset.blocks=JSON.stringify(bloc
 }
 $("mp-generate").addEventListener("click",generate);
 $("mp-output").addEventListener("click",e=>{const b=e.target.closest("[data-mp-copy]");if(b){const a=JSON.parse($("mp-output").dataset.blocks||"[]");copyText(a[+b.dataset.mpCopy]?.[1]||"")}if(e.target.id==="mp-copy-all")copyText($("mp-output").dataset.all||"");if(e.target.id==="mp-save"){const d=window.__mpDraft;if(!d)return;try{const a=JSON.parse(localStorage.getItem("promova_ai_projects_v1")||"[]");a.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),title:"Movie Promo — "+d.brand,type:"Movie Poster Promo Pack",createdAt:new Date().toISOString(),content:d.prompts.map(x=>x[0]+"\n"+x[1]).join("\n\n"),moviePromo:d});localStorage.setItem("promova_ai_projects_v1",JSON.stringify(a));if(typeof renderProjects==="function")renderProjects();toast("Proyek Movie Poster Promo tersimpan.")}catch(x){toast("Penyimpanan gagal. Kurangi jumlah atau ukuran gambar.")}}});
-addPoster();source();refreshChars();
+addPoster();source("library");refreshChars();
 })();
