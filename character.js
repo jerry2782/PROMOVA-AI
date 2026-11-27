@@ -49,7 +49,7 @@ function renderCharacterAssignments(){
 function selectedCharacterSummary(project){
  const list=getProjectCharacters(project);
  if(!list.length)return "No saved human character is assigned to this project.";
- return list.map(c=>characterDNAText(c)+"\nCharacter reference image: "+(c.photoData?"The user must manually attach the saved character reference image in the external AI service.":"No character photo; use the text DNA only.")).join("\n\n--- NEXT CHARACTER ---\n\n");
+ return list.map(c=>characterDNAText(c)+"\nPRIMARY REFERENCE — MASTER CHARACTER SHEET: "+(c.masterSheetData?"Saved and must be manually attached in the external AI service as the canonical identity reference.":"Not saved; use written DNA and available secondary photo without claiming a Master Sheet is attached.")+"\nSECONDARY REFERENCE — ORIGINAL PHOTO: "+(c.photoData?"Saved and must be manually attached in the external AI service as supporting resemblance reference only.":"Not saved.")+"\nREFERENCE PRIORITY: When both images are attached, the approved Master Character Sheet has priority for the designed character identity. The original photo only reinforces resemblance and must not override the Master Sheet.").join("\n\n--- NEXT CHARACTER ---\n\n");
 }
 function ensureFrameCharacterBox(){
  const ref=document.getElementById("frame-product-reference");
