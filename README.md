@@ -1,3 +1,13 @@
+# PROMOVA AI — V2.4.0
+
+## V2.4.0 — Movie Poster Promo Video Director 2.0
+- Generates a separate, detailed video-generation prompt for the opening, every individual movie poster showcase, and closing.
+- Adds timed action beats, presenter identity and wardrobe lock, poster reference lock, camera/composition direction, lighting/color continuity, transitions, audio guidance, and negative constraints.
+- Requires a poster image for every movie entry and a company logo before generating the production pack.
+- Allocates clip durations so opening + all poster showcases + closing equal the selected total duration; warns when the selected duration cannot fit all posters.
+- Keeps exact film schedule and CTA as editor overlays to prevent video-model text errors.
+- External AI video generation and final clip assembly remain manual.
+
 # PROMOVA AI — V2.3.0
 
 ## V2.3.0 — Movie Poster Promo Studio
