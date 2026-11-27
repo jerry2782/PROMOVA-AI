@@ -1,3 +1,14 @@
+# PROMOVA AI — V2.3.0
+
+## V2.3.0 — Movie Poster Promo Studio
+- New dedicated cinema advertising menu, separate from product affiliate workflows.
+- Supports Character Library, uploaded presenter references, and company mascot references.
+- Upload a company logo and multiple movie posters; add a film title, date, showtimes, and notes for each poster.
+- Creates separate opening, poster-showcase, and closing video prompts for external AI services.
+- Produces an exact schedule overlay plan for manual editing, avoiding reliance on AI video text rendering.
+- Images are compressed in-browser and stored locally with the saved project; browser storage limits still apply.
+- Video generation and final text/logo compositing remain manual in external AI/video editing tools.
+
 # PROMOVA AI — V2.2.0
 
 ## V2.2.0 — Flexible Duration & Scene Count
