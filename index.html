@@ -55,7 +55,7 @@
           <button class="quick-card" data-page="create"><span class="quick-icon blue">✦</span><b>Konten Promosi</b><small>Caption, copywriting & hook</small><span class="card-arrow">↗</span></button>
           <button class="quick-card" data-page="video"><span class="quick-icon purple">▶</span><b>Video Affiliate</b><small>Script, scene & storyboard</small><span class="card-arrow">↗</span></button>
           <button class="quick-card" data-page="prompt"><span class="quick-icon cyan">⌘</span><b>AI Image & Video Prompt</b><small>Prompt siap digunakan</small><span class="card-arrow">↗</span></button>
-          <button class="quick-card" data-page="analyzer"><span class="quick-icon orange">◈</span><b>Analisis Produk</b><small>Temukan sudut promosi</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="analyzer"><span class="quick-icon orange">◈</span><b>Analisis Produk</b><small>Temukan sudut promosi</small><span class="card-arrow">↗</span></button><button class="quick-card" data-page="cinematic"><span class="quick-icon purple">✧</span><b>Cinematic Logo Reveal</b><small>Opening video & logo reveal</small><span class="card-arrow">↗</span></button>
           <button class="quick-card" data-page="characters"><span class="quick-icon purple">♙</span><b>Character DNA Studio</b><small>Buat dan kelola karakter manusia</small><span class="card-arrow">↗</span></button>
         </div>
         <div class="section-heading gallery-heading">
@@ -346,6 +346,29 @@
           <button type="button" class="primary-btn full" id="director-prepare-video">Siapkan prompt video untuk AI External Studio</button>
         </div>
       </section>
+      <section class="page" id="page-cinematic">
+        <div class="page-intro"><span class="eyebrow">CINEMATIC BRAND INTRO</span><h1>Cinematic <em>Logo Reveal</em></h1><p>Buat prompt opening sinematik dengan logo asli muncul di tengah bingkai dinding.</p></div>
+        <div class="studio-layout">
+          <div class="form-panel">
+            <div class="panel-title"><span class="step-number">01</span><div><b>Referensi produksi</b><small>Unggah logo dan video referensi ruangan</small></div></div>
+            <label>Nama brand / studio</label><input id="cr-brand" value="SAMS Studio">
+            <label>Logo asli (wajib untuk referensi)</label><input id="cr-logo" type="file" accept="image/*">
+            <div id="cr-logo-preview" class="cr-upload-preview">Belum ada logo diunggah</div>
+            <label>Video referensi ruangan (opsional)</label><input id="cr-reference" type="file" accept="video/*">
+            <p class="helper">Lampirkan file logo dan video referensi secara manual saat membuka layanan AI video. File tidak dikirim otomatis.</p>
+            <label>Konsep visual</label><select id="cr-scene"><option>Luxury dark room with golden geometric wall frames</option><option>Premium modern cinema lobby with illuminated wall</option><option>Minimalist black studio with elegant gold frame</option></select>
+            <label>Animasi logo</label><select id="cr-reveal"><option>Logo gradually emerges inside the central wall frame</option><option>Golden light sweep reveals the logo on the central wall</option><option>Central wall panel illuminates and reveals the logo</option></select>
+            <label>Durasi</label><select id="cr-duration"><option selected>10 seconds</option><option>8 seconds</option><option>12 seconds</option><option>15 seconds</option></select>
+            <label>Format</label><select id="cr-ratio"><option>Vertical 9:16</option><option>Landscape 16:9</option><option>Square 1:1</option></select>
+            <label>Platform AI video tujuan</label><select id="cr-provider"><option value="https://labs.google/fx/tools/flow">Google Flow / Veo</option><option value="https://gemini.google.com/app">Google Gemini</option><option value="https://chatgpt.com/">ChatGPT</option></select>
+            <button type="button" id="cr-generate" class="primary-btn full">✦ Generate cinematic prompt</button>
+          </div>
+          <div class="output-panel">
+            <div class="panel-title"><span class="step-number">02</span><div><b>Production prompt</b><small>Prompt siap disalin dan digunakan</small></div></div>
+            <div id="cr-output"><div class="empty-state"><div class="empty-icon">✧</div><b>Siap membuat opening</b><p>Lengkapi arahan visual, lalu generate prompt.</p></div></div>
+          </div>
+        </div>
+      </section>
       <footer class="footer">PROMOVA AI <span>•</span> Create responsibly. Promote transparently.</footer>
     </main>
   </div>
@@ -365,7 +388,7 @@
     <button data-page="workspace"><span>▣</span> Production Workspace</button>
     <button data-page="publishing"><span>↗</span> Publishing Kit</button>
     <button data-page="characters"><span>♙</span> Character DNA Studio</button>
-    <button data-page="director"><span>🎬</span> Hybrid AI Director</button>
+    <button data-page="director"><span>🎬</span> Hybrid AI Director</button><button data-page="cinematic"><span>✧</span> Cinematic Logo Reveal</button>
     <button data-page="frames"><span>▧</span> First & Last Frame</button>
     <button data-page="pipeline"><span>⇢</span> Production Pipeline</button>
     <button data-page="external"><span>✧</span> AI External Studio</button>
