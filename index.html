@@ -24,6 +24,7 @@
         <button class="nav-item" data-page="analyzer"><span>◈</span> Product Analyzer</button>
         <button class="nav-item" data-page="video"><span>▶</span> Video Studio</button>
         <button class="nav-item" data-page="prompt"><span>⌘</span> Prompt Studio</button>
+        <button class="nav-item" data-page="characters"><span>♙</span> Character DNA Studio</button>
         <button class="nav-item" data-page="projects"><span>▤</span> My Projects</button>
         <button class="nav-item" data-page="publishing"><span>↗</span> Publishing Kit</button>
       </nav>
@@ -55,6 +56,7 @@
           <button class="quick-card" data-page="video"><span class="quick-icon purple">▶</span><b>Video Affiliate</b><small>Script, scene & storyboard</small><span class="card-arrow">↗</span></button>
           <button class="quick-card" data-page="prompt"><span class="quick-icon cyan">⌘</span><b>AI Image & Video Prompt</b><small>Prompt siap digunakan</small><span class="card-arrow">↗</span></button>
           <button class="quick-card" data-page="analyzer"><span class="quick-icon orange">◈</span><b>Analisis Produk</b><small>Temukan sudut promosi</small><span class="card-arrow">↗</span></button>
+          <button class="quick-card" data-page="characters"><span class="quick-icon purple">♙</span><b>Character DNA Studio</b><small>Buat dan kelola karakter manusia</small><span class="card-arrow">↗</span></button>
         </div>
         <div class="section-heading gallery-heading">
           <div><span class="eyebrow">MY CREATIONS</span><h2>Galeri hasil produksi</h2><p class="gallery-subtitle">Konten dan ide kreatif yang sudah kamu simpan.</p></div>
@@ -291,6 +293,7 @@
             <div class="panel-title"><span class="step-number">01</span><div><b>Buat karakter baru</b><small>Identitas permanen dipisahkan dari variasi adegan</small></div></div>
             <label>Nama karakter <span class="required">*</span></label><input id="character-name" required placeholder="Contoh: Arka — Mahasiswa"><label>Peran / tipe karakter</label><input id="character-role" placeholder="Mahasiswa, pekerja muda, presenter..."><label>Usia karakter</label><input id="character-age" placeholder="Contoh: 24 tahun"><label>Permanent Character DNA / deskripsi fisik</label><textarea id="character-appearance" rows="5" placeholder="Jelaskan bentuk wajah, warna kulit, mata, hidung, bibir, rambut, tinggi dan proporsi tubuh, serta ciri khas. Hindari detail yang tidak diketahui dari foto."></textarea><label>Kepribadian dan pembawaan</label><textarea id="character-personality" rows="2" placeholder="Contoh: ramah, percaya diri, santai..."></textarea><label>Suara / cara berbicara (opsional)</label><input id="character-voice" placeholder="Contoh: suara pria dewasa, hangat, tempo santai"><label>Foto referensi karakter</label><div class="upload-box"><input id="character-photo" type="file" accept="image/*"><label class="upload-placeholder" id="character-upload-placeholder" for="character-photo"><span class="upload-symbol">＋</span><b>Upload foto karakter</b><small>Foto wajah atau full body yang boleh digunakan</small></label><div class="image-preview-wrap hidden" id="character-photo-wrap"><img id="character-photo-preview" alt="Referensi karakter"><div><b id="character-photo-name">Foto karakter</b><small id="character-photo-size"></small><button type="button" class="text-btn" id="character-photo-remove">Hapus foto</button></div></div></div>
             <p class="helper">Kamu boleh menggunakan foto saja, deskripsi saja, atau keduanya. Gunakan foto orang dengan izin yang sesuai.</p>
+            <label>Layanan AI gambar eksternal</label><select id="character-image-provider"><option value="gemini">Google Gemini</option><option value="chatgpt">ChatGPT Images</option><option value="canva">Canva</option></select>
             <label>Gaya visual dasar</label><select id="character-visual-style"><option>Photorealistic</option><option>Cinematic photorealistic</option><option>Stylized 3D</option><option>Anime</option><option>Illustration</option></select>
             <div class="character-actions"><button type="button" class="secondary-btn" id="character-build-prompt">Susun prompt karakter</button><button type="submit" class="primary-btn">Simpan Character DNA</button></div>
             <label>Prompt pembuatan / konsistensi karakter</label><textarea id="character-prompt" rows="8" placeholder="Prompt akan disusun dari DNA karakter. Salin ke AI eksternal dan lampirkan foto referensi jika ada."></textarea>
