@@ -11,7 +11,7 @@ function saveProjects(){localStorage.setItem(DB_KEY,JSON.stringify(projects));re
 function loadSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}catch{return {}}}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.classList.remove("show"),2300)}
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function go(page){if(page==="workspace"&&typeof renderWorkspace==="function")renderWorkspace();if(page==="publishing"&&typeof refreshPublishingProjects==="function")refreshPublishingProjects();document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
+function go(page){if(page==="workspace"&&typeof renderWorkspace==="function")renderWorkspace();if(page==="publishing"&&typeof refreshPublishingProjects==="function")refreshPublishingProjects();if(page==="external"&&typeof refreshExternalProjects==="function")refreshExternalProjects();document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();go(b.dataset.page)}});
 const moreToggle=document.getElementById("more-menu-toggle");
 const moreMenu=document.getElementById("more-menu");
