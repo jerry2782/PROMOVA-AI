@@ -273,7 +273,8 @@ function renderPipeline(){
  const percent=Math.round(done/pipelineStages.length*100);
  overview.innerHTML='<div class="pipeline-progress-head"><b>'+esc(project.title)+'</b><strong>'+percent+'%</strong></div><div class="pipeline-progress"><span style="width:'+percent+'%"></span></div><small>'+done+' dari '+pipelineStages.length+' tahap selesai · '+esc(project.type)+'</small>';
  root.innerHTML=pipelineStages.map((stage,index)=>{
-  const complete=project.pipeline[stage.id]===true;
+  const framesApproved=!!(project.framePlan?.firstImage&&project.framePlan?.lastImage&&project.framePlan?.firstApproved&&project.framePlan?.lastApproved);
+  const complete=stage.id==="image"?framesApproved:stage.id==="video"?(framesApproved&&project.pipeline[stage.id]===true):project.pipeline[stage.id]===true;
   const prompt=pipelinePrompt(project,stage);
   const framesApproved=!!(project.framePlan?.firstApproved&&project.framePlan?.lastApproved);
   const unavailable=(prompt.startsWith("Materi ")&&prompt.includes("belum ditemukan"))||(stage.id==="video"&&!framesApproved);
@@ -284,6 +285,8 @@ document.getElementById("pipeline-project").addEventListener("change",renderPipe
 document.getElementById("pipeline-stages").addEventListener("change",e=>{
  const checkbox=e.target.closest("[data-pipeline-done]");if(!checkbox)return;
  const project=projects.find(p=>p.id===document.getElementById("pipeline-project").value);if(!project)return;
+ if(checkbox.dataset.pipelineDone==="video"&&!(project.framePlan?.firstApproved&&project.framePlan?.lastApproved)){checkbox.checked=false;toast("Setujui kedua frame terlebih dahulu");return}
+ if(checkbox.dataset.pipelineDone==="image"){checkbox.checked=!!(project.framePlan?.firstApproved&&project.framePlan?.lastApproved);if(!checkbox.checked){toast("Selesaikan persetujuan kedua frame di Frame Planner");return}}
  project.pipeline=project.pipeline||{};project.pipeline[checkbox.dataset.pipelineDone]=checkbox.checked;
  project.pipelineUpdatedAt=new Date().toISOString();localStorage.setItem(DB_KEY,JSON.stringify(projects));renderPipeline();
  toast(checkbox.checked?"Tahap ditandai selesai":"Status tahap diperbarui");
@@ -357,7 +360,7 @@ async function handleFrameUpload(which,file){
  try{
   const data=await compressImage(file);
   p.framePlan=p.framePlan||{};
-  p.framePlan[which+"Image"]=data;p.framePlan[which+"Name"]=file.name;p.framePlan[which+"Approved"]=false;
+  p.framePlan[which+"Image"]=data;p.framePlan[which+"Name"]=file.name;p.framePlan[which+"Approved"]=false;p.pipeline=p.pipeline||{};p.pipeline.image=false;p.pipeline.video=false;
   document.getElementById("frame-"+which+"-approve").checked=false;
   document.getElementById("frame-"+which+"-approve").disabled=false;
   renderFramePreview(which,data);saveProjects();updateFrameGate(p);toast("Gambar frame diunggah. Periksa lalu setujui secara manual.");
@@ -368,7 +371,7 @@ document.getElementById("frame-first-file").addEventListener("change",e=>handleF
 document.getElementById("frame-last-file").addEventListener("change",e=>handleFrameUpload("last",e.target.files[0]));
 ["first","last"].forEach(which=>{
  document.getElementById("frame-"+which+"-copy").addEventListener("click",()=>{const v=document.getElementById("frame-"+which+"-prompt").value.trim();if(!v){toast("Muat proyek terlebih dahulu");return}copyText(v)});
- document.getElementById("frame-"+which+"-open").addEventListener("click",()=>{const v=document.getElementById("frame-"+which+"-prompt").value.trim();if(!v){toast("Muat proyek terlebih dahulu");return}window.open(frameImageProviders[0][1],"_blank","noopener,noreferrer");toast("AI gambar dibuka. Tempel prompt dan lampirkan referensi produk secara manual.")});
+ document.getElementById("frame-"+which+"-open").addEventListener("click",()=>{const v=document.getElementById("frame-"+which+"-prompt").value.trim();if(!v){toast("Muat proyek terlebih dahulu");return}const provider=frameImageProviders[Number(document.getElementById("frame-image-provider").value)]||frameImageProviders[0];window.open(provider[1],"_blank","noopener,noreferrer");toast(provider[0]+" dibuka. Tempel prompt dan lampirkan referensi produk secara manual.")});
  document.getElementById("frame-"+which+"-approve").addEventListener("change",e=>{
   const p=projects.find(x=>x.id===document.getElementById("frame-project").value);if(!p)return;p.framePlan=p.framePlan||{};
   if(!p.framePlan[which+"Image"]){e.target.checked=false;toast("Upload gambar frame terlebih dahulu");return}
