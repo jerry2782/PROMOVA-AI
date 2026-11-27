@@ -7,7 +7,7 @@
   <meta name="description" content="PROMOVA AI — AI Content Production Studio">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=1.5.1">
+  <link rel="stylesheet" href="styles.css?v=1.7.0">
   <title>PROMOVA AI — Content Studio</title>
 </head>
 <body>
@@ -206,6 +206,16 @@
         </div>
       </section>
 
+      <section class="page" id="page-pipeline">
+        <div class="page-intro"><span class="eyebrow">END-TO-END PRODUCTION</span><h1>Production <em>Pipeline</em></h1><p>Atur tahapan kerja dari brief hingga materi siap publikasi. Tandai setiap tahap setelah kamu menyelesaikannya di layanan AI pilihanmu.</p></div>
+        <div class="form-panel narrow pipeline-panel">
+          <label>Pilih proyek produksi</label><select id="pipeline-project"><option value="">Pilih proyek tersimpan...</option></select>
+          <div id="pipeline-overview" class="pipeline-overview"><b>Pilih proyek untuk melihat alur produksinya.</b><small>Progress disimpan di browser perangkat ini.</small></div>
+          <div id="pipeline-stages" class="pipeline-stages"></div>
+          <div class="notice"><span>ⓘ</span><div><b>Alur kerja external</b><small>Tombol Siapkan tahap akan membawa prompt ke AI External Studio. Produksi gambar/video dilakukan di layanan tersebut, lalu kembali ke sini untuk menandai tahap selesai. PROMOVA tidak menjalankan atau mengunggah hasil AI secara otomatis.</small></div></div>
+        </div>
+      </section>
+
       <section class="page" id="page-styles">
         <div class="page-intro"><span class="eyebrow">CREATIVE STYLE COLLECTION</span><h1>Styles <em>Library</em></h1><p>Pilih arahan visual untuk membantu PROMOVA menyusun prompt yang konsisten.</p></div>
         <div class="style-library-grid">
@@ -262,11 +272,13 @@
     <button data-page="styles"><span>✦</span> Styles Library</button>
     <button data-page="workspace"><span>▣</span> Production Workspace</button>
     <button data-page="publishing"><span>↗</span> Publishing Kit</button>
+    <button data-page="pipeline"><span>⇢</span> Production Pipeline</button>
     <button data-page="external"><span>✧</span> AI External Studio</button>
+    <button data-page="pipeline"><span>⇢</span> Production Pipeline</button>
     <button data-page="external"><span>✧</span> AI External Studio</button>
     <button data-page="settings"><span>⚙</span> Settings</button>
   </div>
   <div id="toast" class="toast" role="status"></div>
-  <script src="app.js?v=1.6.0"></script>
+  <script src="app.js?v=1.7.0"></script>
 </body>
 </html>
