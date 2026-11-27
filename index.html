@@ -167,17 +167,26 @@
       </section>
 
       <section class="page" id="page-publishing">
-        <div class="page-intro"><span class="eyebrow">READY TO PUBLISH</span><h1>Publishing <em>Kit</em></h1><p>Kumpulkan caption, CTA, hashtag, dan tautan afiliasi sebelum publikasi.</p></div>
+        <div class="page-intro"><span class="eyebrow">READY TO PUBLISH</span><h1>Publishing <em>Kit</em></h1><p>Siapkan materi publikasi dari proyek tersimpan, lalu periksa sebelum dibagikan.</p></div>
         <div class="form-panel narrow">
+          <label>Pilih proyek produksi</label><select id="pub-project"><option value="">Pilih proyek Content Production...</option></select>
+          <button id="pub-load" class="secondary-btn full" type="button">Muat data proyek</button>
           <label>Nama kampanye / produk</label><input id="pub-name" placeholder="Nama produk atau kampanye">
-          <label>Caption</label><textarea id="pub-caption" rows="5" placeholder="Tempel caption yang sudah disiapkan..."></textarea>
-          <label>CTA</label><input id="pub-cta" placeholder="Contoh: Cek detail produk melalui tautan berikut">
+          <label>Platform</label><input id="pub-platform" placeholder="TikTok / Instagram / Facebook">
+          <label>Judul konten</label><input id="pub-title" placeholder="Judul singkat konten">
+          <label>Caption</label><textarea id="pub-caption" rows="5" placeholder="Caption berdasarkan fakta produk..."></textarea>
+          <label>Script voice-over</label><textarea id="pub-voice" rows="4" placeholder="Narasi video yang siap direkam..."></textarea>
+          <label>CTA</label><input id="pub-cta" placeholder="Ajakan tindakan yang jelas">
+          <label>Deskripsi / keterangan</label><textarea id="pub-description" rows="3" placeholder="Keterangan singkat untuk unggahan..."></textarea>
           <label>Link afiliasi / tujuan</label><input id="pub-link" type="url" placeholder="https://...">
           <label>Hashtag</label><input id="pub-tags" placeholder="#rekomendasi #reviewproduk">
-          <label class="check-row"><input id="pub-disclosure" type="checkbox" checked> Saya sudah menambahkan pengungkapan afiliasi / promosi jika diperlukan</label>
-          <button id="pub-copy" class="primary-btn full">Salin publishing kit</button>
-          <p class="helper">Periksa tautan, harga, klaim, hak penggunaan materi, dan ketentuan platform sebelum menerbitkan.</p>
+          <label class="check-row"><input id="pub-disclosure" type="checkbox" checked> Tambahkan pengungkapan afiliasi / promosi bila relevan</label>
+          <div class="notice"><span>✦</span><div><b>Checklist sebelum publikasi</b><small>Periksa fakta, harga, spesifikasi, stok, tautan, hak penggunaan aset, dan aturan platform. PROMOVA tidak memverifikasi informasi produk secara otomatis.</small></div></div>
+          <div class="workspace-actions"><button id="pub-generate" class="primary-btn" type="button">Susun draft dari proyek</button><button id="pub-save" class="secondary-btn" type="button">Simpan ke proyek</button></div>
+          <button id="pub-copy" class="primary-btn full" type="button">Salin seluruh Publishing Kit</button>
+          <p class="helper">Materi disusun dari data yang kamu masukkan. Periksa semua klaim dan tautan sebelum menerbitkan.</p>
         </div>
+        <div id="pub-checklist" class="form-panel narrow"><h3>Checklist publikasi</h3><label class="check-row"><input type="checkbox"> Semua klaim sesuai fakta terverifikasi</label><label class="check-row"><input type="checkbox"> Harga, stok, dan tautan sudah diperiksa</label><label class="check-row"><input type="checkbox"> Foto, musik, dan video memiliki hak penggunaan</label><label class="check-row"><input type="checkbox"> Disclosure afiliasi / promosi sudah dicantumkan bila relevan</label><label class="check-row"><input type="checkbox"> Format dan ketentuan platform sudah diperiksa</label></div>
       </section>
 
       <section class="page" id="page-styles">
