@@ -96,6 +96,18 @@
             <select id="content-goal"><option>Penjualan / affiliate</option><option>Brand awareness</option><option>Review dan rekomendasi</option><option>Engagement</option><option>Informasi / edukasi</option><option>Ajakan berkunjung</option></select>
             <label>Platform publikasi</label>
             <select id="content-platform"><option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>Facebook</option><option>WhatsApp</option><option>YouTube</option><option>Multi-platform</option></select>
+            <label for="content-style-preset">Gaya visual / Styles Library</label>
+            <select id="content-style-preset">
+              <option value="Product Commercial">Product Commercial — iklan produk premium</option>
+              <option value="Cinematic Film">Cinematic Film — visual film dramatis</option>
+              <option value="Social Media">Social Media — konten sosial modern</option>
+              <option value="Lifestyle">Lifestyle — natural dan autentik</option>
+              <option value="Affiliate UGC">Affiliate UGC — rekomendasi kreator</option>
+              <option value="Storytelling">Storytelling — narasi emosional</option>
+              <option value="Anime">Anime — ilustrasi anime</option>
+              <option value="Cinematic 3D">Cinematic 3D — animasi 3D</option>
+            </select>
+            <button class="text-btn style-library-link" type="button" data-page="styles">✦ Jelajahi Styles Library</button>
             <label>Gaya komunikasi</label>
             <select id="content-tone"><option>Persuasif dan menjual</option><option>Santai dan bersahabat</option><option>Review jujur dan informatif</option><option>Storytelling</option><option>Profesional</option><option>Humoris</option><option>Cinematic</option></select>
             <label>Bahasa hasil</label>
@@ -168,6 +180,22 @@
         </div>
       </section>
 
+      <section class="page" id="page-styles">
+        <div class="page-intro"><span class="eyebrow">CREATIVE STYLE COLLECTION</span><h1>Styles <em>Library</em></h1><p>Pilih arahan visual untuk membantu PROMOVA menyusun prompt yang konsisten.</p></div>
+        <div class="style-library-grid">
+          <button class="style-card selected" data-style="Product Commercial"><div class="style-art style-product"><span>✦</span></div><b>Product Commercial</b><small>Iklan produk premium, studio lighting, detail produk.</small></button>
+          <button class="style-card" data-style="Cinematic Film"><div class="style-art style-film"><span>▶</span></div><b>Cinematic Film</b><small>Nuansa film, pencahayaan dramatis, komposisi sinematik.</small></button>
+          <button class="style-card" data-style="Social Media"><div class="style-art style-social"><span>▦</span></div><b>Social Media</b><small>Visual modern, cerah, mudah dibaca di layar ponsel.</small></button>
+          <button class="style-card" data-style="Lifestyle"><div class="style-art style-life"><span>☼</span></div><b>Lifestyle</b><small>Natural, autentik, dan dekat dengan keseharian.</small></button>
+          <button class="style-card" data-style="Affiliate UGC"><div class="style-art style-ugc"><span>◎</span></div><b>Affiliate UGC</b><small>Gaya konten kreator, relatable, transparan, tidak berlebihan.</small></button>
+          <button class="style-card" data-style="Storytelling"><div class="style-art style-story"><span>✎</span></div><b>Storytelling</b><small>Alur cerita, emosi, konflik ringan, dan CTA natural.</small></button>
+          <button class="style-card" data-style="Anime"><div class="style-art style-anime"><span>◇</span></div><b>Anime</b><small>Ilustrasi anime dengan karakter dan warna konsisten.</small></button>
+          <button class="style-card" data-style="Cinematic 3D"><div class="style-art style-3d"><span>⬡</span></div><b>Cinematic 3D</b><small>Visual 3D detail, material realistis, lighting sinematik.</small></button>
+        </div>
+        <div class="notice"><span>✦</span><div><b>Style membantu mengarahkan prompt</b><small>Styles Library tidak menghasilkan gambar secara langsung. Pilihanmu diterapkan pada brief dan prompt untuk AI eksternal.</small></div></div>
+        <button class="primary-btn full" id="apply-style-library">Gunakan gaya terpilih →</button>
+      </section>
+
       <section class="page" id="page-settings">
         <div class="page-intro"><span class="eyebrow">PREFERENCES & DATA</span><h1>Settings</h1><p>Kelola profil kreator dan cadangan data lokal.</p></div>
         <div class="settings-grid">
@@ -197,6 +225,7 @@
     <div class="more-menu-head"><b>Creative tools</b><button type="button" id="more-menu-close" aria-label="Tutup">×</button></div>
     <button data-page="analyzer"><span>◈</span> Product Analyzer</button>
     <button data-page="prompt"><span>⌘</span> Prompt Studio</button>
+    <button data-page="styles"><span>✦</span> Styles Library</button>
     <button data-page="publishing"><span>↗</span> Publishing Kit</button>
     <button data-page="settings"><span>⚙</span> Settings</button>
   </div>
