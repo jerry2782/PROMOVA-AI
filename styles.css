@@ -202,3 +202,10 @@ input:focus,textarea:focus,select:focus{border-color:#a879ed;box-shadow:0 0 0 3p
 .character-empty{padding:20px 12px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:10px;line-height:1.6}
 @media(max-width:850px){.character-layout{grid-template-columns:1fr}}
 @media(max-width:390px){.character-actions{grid-template-columns:1fr}.character-card{grid-template-columns:62px minmax(0,1fr)}.character-card img,.character-avatar-placeholder{width:62px;height:76px}}
+
+/* Character DNA guided photo-description workflow */
+.character-analysis-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:9px 0}
+.character-analysis-actions .helper{margin:0;flex:1;min-width:160px;font-size:10px}
+#character-analyze-photo:disabled,#character-use-analysis:disabled,#character-build-prompt:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.4)}
+#character-analysis-result{border-color:#74529a;background:#171022}
+#character-role{width:100%;min-height:42px}
