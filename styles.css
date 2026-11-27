@@ -142,3 +142,21 @@ input:focus,textarea:focus,select:focus{border-color:#a879ed;box-shadow:0 0 0 3p
 #page-external .external-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 #page-external .external-actions button{width:100%;min-width:0;min-height:52px;padding:11px 9px;white-space:normal;line-height:1.3}
 @media(max-width:360px){#page-external .external-actions{grid-template-columns:1fr}}
+
+/* PROMOVA AI V1.7 Production Pipeline */
+.pipeline-overview{margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--white);display:grid;gap:9px}
+.pipeline-overview>b{font-size:14px}.pipeline-overview>small{font-size:10px;color:var(--muted)}
+.pipeline-progress-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.pipeline-progress-head b{font-size:14px}.pipeline-progress-head strong{font-size:18px;color:#c49aff}
+.pipeline-progress{height:8px;background:#292038;border-radius:99px;overflow:hidden}.pipeline-progress span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#8537f4,#c04eff);transition:width .2s ease}
+.pipeline-stages{display:grid;gap:12px;margin:16px 0}
+.pipeline-stage{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--white)}
+.pipeline-stage.is-complete{border-color:#8b6cff88}
+.pipeline-stage-top{display:flex;align-items:flex-start;gap:10px}
+.pipeline-stage-copy{flex:1;min-width:0;display:grid;gap:5px}
+.pipeline-stage-copy b{font-size:13px}.pipeline-stage-copy small{font-size:10px;line-height:1.5;color:var(--muted)}
+.pipeline-state{font-size:9px;color:#b98af7;background:#38224d;border-radius:99px;padding:5px 8px;white-space:nowrap}
+.pipeline-stage.is-complete .pipeline-state{color:#9be2c5;background:#173b34}
+.pipeline-stage-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:13px 0 0 42px}
+.pipeline-stage-actions .secondary-btn{padding:9px 12px}.pipeline-done{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--muted);margin:0}
+.pipeline-done input{accent-color:#a855f7}
+@media(max-width:390px){.pipeline-stage-actions{margin-left:0;align-items:flex-start;flex-direction:column}}
