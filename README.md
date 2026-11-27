@@ -1,3 +1,12 @@
+# PROMOVA AI — V2.4.1
+
+## V2.4.1 — Movie Poster Promo Video Director 2.1
+- Fixed copy-button event collision by using dedicated Movie Promo copy controls.
+- Changed the video workflow to generate presenter/background footage only; official logos, movie posters, dates, showtimes and CTA are intended as exact overlays in the video editor.
+- Added fixed camera, fixed cinema-lobby set, stable presenter placement, repeated wardrobe and lighting continuity, and a clearer dance/presentation choreography.
+- Removed temporary clothing notes from the permanent identity instructions where detected.
+- External AI tools may still vary duration and visual consistency; trim and align generated clips in the editor.
+
 # PROMOVA AI — V2.4.0
 
 ## V2.4.0 — Movie Poster Promo Video Director 2.0
