@@ -1,4 +1,10 @@
-# PROMOVA AI — V1.8.0
+# PROMOVA AI — V1.11.0
+
+## V1.11.0
+- Character Identity Lock with two visual references: Primary Master Character Sheet and Secondary Original Photo.
+- Character Library stores both references separately and keeps the Master Sheet as the canonical identity source.
+- First/Last Frame and Video prompts specify manual attachment and reference priority for both images.
+- Existing characters remain compatible: their saved photo remains the Secondary Original Photo; Master Sheet can be added later.
 
 AI Content Production Studio — external AI workflow, local-first PWA.
 
