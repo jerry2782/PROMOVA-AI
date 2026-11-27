@@ -173,3 +173,32 @@ input:focus,textarea:focus,select:focus{border-color:#a879ed;box-shadow:0 0 0 3p
 #page-frames input[type=file]{padding:10px;font-size:11px}
 #frame-video-prepare:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.5)}
 @media(max-width:700px){.frame-reference img{max-height:150px}.frame-preview{min-height:120px}}
+
+/* PROMOVA AI V1.9 — Character DNA Studio */
+.character-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.character-layout .form-panel{min-width:0}
+.character-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+.character-actions button{min-width:0;white-space:normal;line-height:1.35}
+.character-library{display:grid;gap:10px}
+.character-card{display:grid;grid-template-columns:76px minmax(0,1fr);gap:11px;padding:11px;border:1px solid var(--line);border-radius:13px;background:#171022}
+.character-card img,.character-avatar-placeholder{width:76px;height:88px;object-fit:cover;border-radius:9px;background:#302044}
+.character-avatar-placeholder{display:grid;place-items:center;color:#c49aff;font-size:27px}
+.character-card b{display:block;font-size:12px;color:var(--ink)}
+.character-card small{display:block;font-size:9px;color:var(--muted);line-height:1.5;margin:4px 0}
+.character-card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+.character-card-actions button{font-size:9px;padding:6px 9px}
+.character-assignments{display:grid;gap:8px;margin:12px 0}
+.character-assignment{display:flex;align-items:center;gap:9px;padding:9px;border:1px solid var(--line);border-radius:10px;background:#171022}
+.character-assignment img,.character-assignment .character-avatar-placeholder{width:42px;height:48px;object-fit:cover;border-radius:7px;font-size:17px}
+.character-assignment input{accent-color:#a855f7}
+.character-assignment span{min-width:0;display:grid;gap:3px}
+.character-assignment b{font-size:10px;color:var(--ink)}
+.character-assignment small{font-size:9px;color:var(--muted)}
+.frame-character-reference{display:grid;gap:8px;padding:12px;border:1px solid #49345d;border-radius:12px;margin:12px 0;background:#171022}
+.frame-character-reference b{font-size:11px;color:#e7d9f5}
+.frame-character-reference p{font-size:10px;color:#c0afd2;line-height:1.5;margin:0}
+.frame-character-chips{display:flex;flex-wrap:wrap;gap:7px}
+.frame-character-chips span{font-size:9px;padding:6px 8px;border:1px solid #634582;border-radius:8px;color:#dec8f6}
+.character-empty{padding:20px 12px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:10px;line-height:1.6}
+@media(max-width:850px){.character-layout{grid-template-columns:1fr}}
+@media(max-width:390px){.character-actions{grid-template-columns:1fr}.character-card{grid-template-columns:62px minmax(0,1fr)}.character-card img,.character-avatar-placeholder{width:62px;height:76px}}
