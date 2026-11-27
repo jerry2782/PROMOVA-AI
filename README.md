@@ -1,4 +1,10 @@
-# PROMOVA AI — V2.1.0
+# PROMOVA AI — V2.2.0
+
+## V2.2.0 — Flexible Duration & Scene Count
+- Custom total video duration: integer seconds from 8 to 300.
+- Manually enter scene count from 1 to 100; single-scene videos are supported.
+- Draft scenes divide the total duration across the selected scene count; durations remain editable in the scene editor.
+- Adding or deleting scenes updates the scene-count field.
 
 ## V2.1.0 — Sequential First Frame Continuity
 - First Frame Only: one opening reference image per scene; no required Last Frame.
