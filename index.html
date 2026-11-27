@@ -70,6 +70,13 @@
             <select id="content-type"><option>Produk fisik</option><option>Produk digital</option><option>Film / hiburan</option><option>Travel / wisata</option><option>Jasa / layanan</option><option>Event / musik</option><option>Lainnya</option></select>
             <label>Nama produk / objek <span class="required">*</span></label>
             <input id="content-name" required placeholder="Contoh: Earbuds wireless X">
+            <label for="product-image">Foto referensi produk / objek</label>
+            <div class="upload-box" id="product-upload-box">
+              <input id="product-image" type="file" accept="image/*">
+              <label class="upload-placeholder" id="upload-placeholder" for="product-image"><span class="upload-symbol">＋</span><b>Upload foto referensi</b><small>Pilih gambar dari galeri HP (JPG, PNG, WEBP)</small></label>
+              <div class="image-preview-wrap hidden" id="image-preview-wrap"><img id="product-image-preview" alt="Preview foto referensi"><div><b id="image-file-name">Foto referensi</b><small id="image-file-size"></small><button type="button" class="text-btn" id="remove-product-image">Hapus foto</button></div></div>
+            </div>
+            <p class="helper">Foto referensi disimpan di perangkat ini. Lampirkan foto yang sama saat memakai prompt di AI eksternal.</p>
             <label>Deskripsi dan informasi penting</label>
             <textarea id="content-desc" rows="4" placeholder="Tuliskan fitur, manfaat, harga, keunggulan, tanggal tayang, atau informasi yang sudah kamu verifikasi..."></textarea>
             <label>Target audiens</label>
@@ -86,7 +93,7 @@
             <button class="primary-btn full" type="submit">✦ Buat content brief & prompt</button>
           </form>
           <div class="output-panel">
-            <div class="panel-title"><span class="step-number">02</span><div><b>Hasil produksi</b><small>Brief dan prompt siap digunakan</small></div></div>
+            <div class="panel-title"><span class="step-number">02</span><div><b>Hasil produksi</b><small>Paket konten dan prompt siap digunakan di AI eksternal</small></div></div>
             <div id="content-empty" class="empty-state"><div class="empty-icon">✦</div><b>Studio siap digunakan</b><p>Lengkapi informasi di sebelah kiri, lalu buat brief konten.</p></div>
             <div id="content-output" class="output-content hidden"></div>
           </div>
