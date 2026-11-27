@@ -1,5 +1,5 @@
-const CACHE="promova-ai-v1-31";
-const ASSETS=["./","./index.html","./styles.css?v=1.12.0","./app.js?v=1.12.0","./character.js?v=1.2.0","./director.js?v=1.12.0","./poster-promo.js?v=2.2.2","./manifest.webmanifest","./assets/icon.svg"];
+const CACHE="promova-ai-v1-32";
+const ASSETS=["./","./index.html","./styles.css?v=1.12.0","./app.js?v=1.12.0","./character.js?v=1.2.0","./director.js?v=1.12.0","./poster-promo.js?v=2.2.3","./manifest.webmanifest","./assets/icon.svg"];
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>{
