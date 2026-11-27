@@ -93,3 +93,21 @@ input:focus,textarea:focus,select:focus{border-color:#a879ed;box-shadow:0 0 0 3p
 .gallery-empty{min-height:175px;justify-content:center}
 @media(min-width:700px){.creation-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.creation-open{height:auto;aspect-ratio:4/4.4}}
 @media(max-width:390px){.creation-gallery{gap:9px}.creation-open{height:auto;aspect-ratio:4/4.8}}
+
+/* PROMOVA AI V1.3 Styles Library */
+.style-library-link{margin:2px 0 12px;color:#c49aff;text-align:left}
+.style-library-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.style-card{min-width:0;text-align:left;padding:9px;border:1px solid var(--line);border-radius:16px;background:var(--white);color:var(--ink);display:flex;flex-direction:column;gap:7px}
+.style-card.selected{border-color:#b17bfa;box-shadow:0 0 0 2px #a855f733,0 8px 25px #9333ea20}
+.style-card b{font-size:12px}.style-card small{font-size:10px;line-height:1.5;color:var(--muted)}
+.style-art{height:112px;border-radius:11px;display:grid;place-items:center;overflow:hidden;position:relative}
+.style-art span{font-size:36px;color:#f4dcff;text-shadow:0 5px 20px #fff6}
+.style-product{background:radial-gradient(circle at 70% 20%,#b58b60,#51334b 45%,#171020)}
+.style-film{background:linear-gradient(145deg,#192f50,#68405e 55%,#d28b63)}
+.style-social{background:linear-gradient(135deg,#327f9a,#7547b7 50%,#ef8c9c)}
+.style-life{background:linear-gradient(145deg,#8fa58b,#d6b994 55%,#6a7463)}
+.style-ugc{background:linear-gradient(145deg,#543b70,#ba7d8b 55%,#e8b98d)}
+.style-story{background:linear-gradient(145deg,#29375d,#7c456c 55%,#d19c87)}
+.style-anime{background:linear-gradient(145deg,#372b79,#bd5c9e 55%,#f4adbd)}
+.style-3d{background:linear-gradient(145deg,#173e55,#436b90 50%,#a17ac6)}
+@media(min-width:700px){.style-library-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.style-art{height:145px}}
