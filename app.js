@@ -246,7 +246,7 @@ refreshExternalProviders();
 // PROMOVA AI V1.7 — persistent, local-first production pipeline
 const pipelineStages=[
  {id:"brief",title:"Brief & strategi",kind:"master",category:"text",description:"Tinjau strategi, sudut konten, hook, caption, dan arahan produksi."},
- {id:"image",title:"Produksi gambar",kind:"image",category:"image",description:"Gunakan prompt gambar dan lampirkan foto referensi produk bila tersedia."},
+ {id:"image",title:"First & Last Frame",kind:"image",category:"image",description:"Buat dua gambar kunci melalui AI eksternal, upload hasilnya, lalu setujui secara manual."},
  {id:"video",title:"Produksi video",kind:"video",category:"video",description:"Buat video berdasarkan storyboard, prompt, dan konsistensi visual."},
  {id:"publishing",title:"Publishing Kit",kind:"publishing",category:"text",description:"Siapkan caption akhir, CTA, tautan, hashtag, dan disclosure."}
 ];
@@ -258,6 +258,7 @@ function refreshPipelineProjects(){
 }
 function pipelinePrompt(project,stage){
  if(stage.id==="publishing"&&project.publishingKit)return project.publishingKit;
+ if(stage.id==="video"&&!(project.framePlan?.firstApproved&&project.framePlan?.lastApproved))return "FRAME APPROVAL REQUIRED";
  return extractExternalPrompt(project,stage.kind);
 }
 function renderPipeline(){
@@ -274,8 +275,9 @@ function renderPipeline(){
  root.innerHTML=pipelineStages.map((stage,index)=>{
   const complete=project.pipeline[stage.id]===true;
   const prompt=pipelinePrompt(project,stage);
-  const unavailable=prompt.startsWith("Materi ")&&prompt.includes("belum ditemukan");
-  return '<article class="pipeline-stage '+(complete?"is-complete":"")+'"><div class="pipeline-stage-top"><span class="step-number">'+String(index+1).padStart(2,"0")+'</span><div class="pipeline-stage-copy"><b>'+stage.title+'</b><small>'+stage.description+'</small></div><span class="pipeline-state">'+(complete?"Selesai":"Belum")+'</span></div><div class="pipeline-stage-actions"><button type="button" class="secondary-btn" data-pipeline-prepare="'+stage.id+'" '+(unavailable?"disabled":"")+'>Siapkan tahap ↗</button><label class="pipeline-done"><input type="checkbox" data-pipeline-done="'+stage.id+'" '+(complete?"checked":"")+'> Tandai selesai</label></div>'+(unavailable?'<p class="helper">Prompt tahap ini belum tersedia pada proyek. Buat Content Production Pack terlebih dahulu.</p>':"")+'</article>';
+  const framesApproved=!!(project.framePlan?.firstApproved&&project.framePlan?.lastApproved);
+  const unavailable=(prompt.startsWith("Materi ")&&prompt.includes("belum ditemukan"))||(stage.id==="video"&&!framesApproved);
+  return '<article class="pipeline-stage '+(complete?"is-complete":"")+'"><div class="pipeline-stage-top"><span class="step-number">'+String(index+1).padStart(2,"0")+'</span><div class="pipeline-stage-copy"><b>'+stage.title+'</b><small>'+stage.description+'</small></div><span class="pipeline-state">'+(complete?"Selesai":"Belum")+'</span></div><div class="pipeline-stage-actions"><button type="button" class="secondary-btn" data-pipeline-prepare="'+stage.id+'" '+(unavailable?"disabled":"")+'>Siapkan tahap ↗</button><label class="pipeline-done"><input type="checkbox" data-pipeline-done="'+stage.id+'" '+(complete?"checked":"")+'> Tandai selesai</label></div>'+(stage.id==="video"&&!framesApproved?'<p class="helper">Selesaikan dan setujui First & Last Frame sebelum menyiapkan prompt video.</p>':unavailable?'<p class="helper">Prompt tahap ini belum tersedia pada proyek. Buat Content Production Pack terlebih dahulu.</p>':"")+'</article>';
  }).join("");
 }
 document.getElementById("pipeline-project").addEventListener("change",renderPipeline);
@@ -290,6 +292,8 @@ document.getElementById("pipeline-stages").addEventListener("click",e=>{
  const button=e.target.closest("[data-pipeline-prepare]");if(!button)return;
  const project=projects.find(p=>p.id===document.getElementById("pipeline-project").value);if(!project)return;
  const stage=pipelineStages.find(s=>s.id===button.dataset.pipelinePrepare);if(!stage)return;
+ if(stage.id==="image"){document.getElementById("frame-project").value=project.id;loadFrameProject();go("frames");return}
+ if(stage.id==="video"&&!(project.framePlan?.firstApproved&&project.framePlan?.lastApproved)){toast("Setujui frame pertama dan terakhir terlebih dahulu");return}
  document.getElementById("external-project").value=project.id;
  document.getElementById("external-kind").value=stage.kind;
  document.getElementById("external-category").value=stage.category;
@@ -300,3 +304,102 @@ document.getElementById("pipeline-stages").addEventListener("click",e=>{
 });
 document.getElementById("pipeline-project").addEventListener("focus",refreshPipelineProjects);
 refreshPipelineProjects();
+
+
+// PROMOVA AI V1.8 — external first/last frame planning with manual approval
+const frameImageProviders=[["ChatGPT Images","https://chatgpt.com/"],["Google Gemini","https://gemini.google.com/app"],["Canva","https://www.canva.com/"]];
+function refreshFrameProjects(){
+ const sel=document.getElementById("frame-project");if(!sel)return;
+ const old=sel.value;sel.innerHTML='<option value="">Pilih proyek Content Production...</option>'+projects.filter(p=>p.type==="Content Production Pack").map(p=>'<option value="'+esc(p.id)+'">'+esc(p.title)+'</option>').join("");
+ if(projects.some(p=>p.id===old))sel.value=old;
+}
+function framePromptsFor(p){
+ const d=p.projectData||{};
+ const facts=d.desc||p.brief||"Use only facts supplied in this project.";
+ const style=d.style||p.style||"Affiliate UGC";
+ const audience=d.audience||"target audience from the project brief";
+ const identity=p.imageData?"Use the attached product reference image as the exact identity lock. Preserve exact silhouette, proportions, materials, colors, controls, display, labels and all recognizable details. Do not redesign or invent branding.":"No product reference image is attached. Do not invent exact product details; use only the supplied description.";
+ const shared="Project: "+p.title+". Visual style: "+style+". Facts: "+facts+". Audience: "+audience+". Vertical 9:16 composition. Photorealistic, clean visual continuity. No fake claims, invented text, watermark or fabricated logos. "+identity;
+ return {
+  first:"Create the FIRST FRAME (opening still image) for a short-form advertisement. "+shared+" Show a clear establishing composition with the product immediately readable, a natural setting and a strong visual hook. This is a single still image, not a collage or storyboard. Leave clean negative space for later text overlay. Camera: medium close-up, eye-level, natural commercial lighting. No motion blur.",
+  last:"Create the LAST FRAME (closing still image) for the same short-form advertisement. "+shared+" Match the same subject identity, wardrobe, product design, location, lighting direction, color grade and camera axis as the first frame. Show a natural closing pose with the product clearly visible and a composition suitable for a final call-to-action overlay. This is a single still image, not a collage or storyboard. Do not add text or logos. Keep continuity with the opening frame."
+ };
+}
+function renderFramePreview(which,data){
+ const el=document.getElementById("frame-"+which+"-preview");
+ el.innerHTML=data?'<img src="'+data+'" alt="Frame '+(which==="first"?"pertama":"terakhir")+'"><span>Gambar tersimpan di perangkat ini</span>':'<span>Belum ada gambar frame '+(which==="first"?"pertama":"terakhir")+'</span>';
+}
+function updateFrameGate(p){
+ const ok=!!(p?.framePlan?.firstImage&&p?.framePlan?.lastImage&&p?.framePlan?.firstApproved&&p?.framePlan?.lastApproved);
+ document.getElementById("frame-video-prepare").disabled=!ok;
+ document.getElementById("frame-video-gate").textContent=ok?"Kedua frame sudah disetujui. Prompt video dapat disiapkan.":"Video belum siap. Upload dan setujui kedua frame terlebih dahulu.";
+}
+function loadFrameProject(){
+ const p=projects.find(x=>x.id===document.getElementById("frame-project").value);
+ const summary=document.getElementById("frame-project-summary");
+ if(!p){summary.innerHTML='<span>ⓘ</span><div><b>Belum ada proyek dipilih</b><small>Pilih proyek untuk menyusun prompt frame awal dan akhir.</small></div>';return}
+ const prompts=framePromptsFor(p);p.framePlan=p.framePlan||{};
+ document.getElementById("frame-first-prompt").value=p.framePlan.firstPrompt||prompts.first;
+ document.getElementById("frame-last-prompt").value=p.framePlan.lastPrompt||prompts.last;
+ document.getElementById("frame-first-approve").checked=!!p.framePlan.firstApproved;
+ document.getElementById("frame-last-approve").checked=!!p.framePlan.lastApproved;
+ document.getElementById("frame-first-approve").disabled=!p.framePlan.firstImage;
+ document.getElementById("frame-last-approve").disabled=!p.framePlan.lastImage;
+ renderFramePreview("first",p.framePlan.firstImage||"");renderFramePreview("last",p.framePlan.lastImage||"");
+ const ref=document.getElementById("frame-product-reference");
+ ref.innerHTML=p.imageData?'<b>Referensi produk proyek</b><img src="'+p.imageData+'" alt="Referensi produk"><small>'+esc(p.imageName||"Foto referensi")+'</small>':'<b>Referensi produk belum tersedia</b><small>Jika produk memiliki bentuk khusus, lampirkan foto referensi yang sama di AI gambar eksternal.</small>';
+ summary.innerHTML='<span>✦</span><div><b>'+esc(p.title)+'</b><small>'+esc(p.platform||"Platform belum ditentukan")+' · '+esc(p.style||"Style belum ditentukan")+' · Frame disimpan lokal</small></div>';
+ updateFrameGate(p);
+}
+async function handleFrameUpload(which,file){
+ if(!file)return;if(!file.type.startsWith("image/")){toast("Pilih file gambar");return}
+ const p=projects.find(x=>x.id===document.getElementById("frame-project").value);if(!p){toast("Pilih proyek terlebih dahulu");return}
+ try{
+  const data=await compressImage(file);
+  p.framePlan=p.framePlan||{};
+  p.framePlan[which+"Image"]=data;p.framePlan[which+"Name"]=file.name;p.framePlan[which+"Approved"]=false;
+  document.getElementById("frame-"+which+"-approve").checked=false;
+  document.getElementById("frame-"+which+"-approve").disabled=false;
+  renderFramePreview(which,data);saveProjects();updateFrameGate(p);toast("Gambar frame diunggah. Periksa lalu setujui secara manual.");
+ }catch{toast("Gagal memproses gambar frame")}
+}
+document.getElementById("frame-project").addEventListener("change",loadFrameProject);
+document.getElementById("frame-first-file").addEventListener("change",e=>handleFrameUpload("first",e.target.files[0]));
+document.getElementById("frame-last-file").addEventListener("change",e=>handleFrameUpload("last",e.target.files[0]));
+["first","last"].forEach(which=>{
+ document.getElementById("frame-"+which+"-copy").addEventListener("click",()=>{const v=document.getElementById("frame-"+which+"-prompt").value.trim();if(!v){toast("Muat proyek terlebih dahulu");return}copyText(v)});
+ document.getElementById("frame-"+which+"-open").addEventListener("click",()=>{const v=document.getElementById("frame-"+which+"-prompt").value.trim();if(!v){toast("Muat proyek terlebih dahulu");return}window.open(frameImageProviders[0][1],"_blank","noopener,noreferrer");toast("AI gambar dibuka. Tempel prompt dan lampirkan referensi produk secara manual.")});
+ document.getElementById("frame-"+which+"-approve").addEventListener("change",e=>{
+  const p=projects.find(x=>x.id===document.getElementById("frame-project").value);if(!p)return;p.framePlan=p.framePlan||{};
+  if(!p.framePlan[which+"Image"]){e.target.checked=false;toast("Upload gambar frame terlebih dahulu");return}
+  p.framePlan[which+"Approved"]=e.target.checked;p.framePlan[which+"Prompt"]=document.getElementById("frame-"+which+"-prompt").value;
+  p.pipeline=p.pipeline||{};p.pipeline.image=!!(p.framePlan.firstApproved&&p.framePlan.lastApproved);
+  p.pipelineUpdatedAt=new Date().toISOString();saveProjects();updateFrameGate(p);
+  toast(e.target.checked?"Frame disetujui":"Persetujuan frame dibatalkan");
+ });
+});
+document.getElementById("frame-save").addEventListener("click",()=>{
+ const p=projects.find(x=>x.id===document.getElementById("frame-project").value);if(!p){toast("Pilih proyek terlebih dahulu");return}
+ p.framePlan=p.framePlan||{};
+ p.framePlan.firstPrompt=document.getElementById("frame-first-prompt").value.trim();
+ p.framePlan.lastPrompt=document.getElementById("frame-last-prompt").value.trim();
+ p.framePlan.firstApproved=document.getElementById("frame-first-approve").checked&&!!p.framePlan.firstImage;
+ p.framePlan.lastApproved=document.getElementById("frame-last-approve").checked&&!!p.framePlan.lastImage;
+ p.pipeline=p.pipeline||{};p.pipeline.image=!!(p.framePlan.firstApproved&&p.framePlan.lastApproved);
+ p.framePlan.updatedAt=new Date().toISOString();saveProjects();updateFrameGate(p);toast("Prompt, gambar, dan status frame disimpan ke proyek");
+});
+document.getElementById("frame-video-prepare").addEventListener("click",()=>{
+ const p=projects.find(x=>x.id===document.getElementById("frame-project").value);
+ if(!p||!(p.framePlan?.firstApproved&&p.framePlan?.lastApproved)){toast("Kedua frame wajib disetujui terlebih dahulu");return}
+ const base=extractExternalPrompt(p,"video");
+ const continuity="\n\nFIRST/LAST FRAME CONTINUITY REQUIREMENTS\nUse the attached approved FIRST FRAME image as the exact opening frame and the approved LAST FRAME image as the exact final frame. Animate a coherent, physically plausible transition between them. Preserve product identity, character identity, wardrobe, location, lighting, color grade and screen direction. Do not redesign the product or introduce new objects. Respect the visual endpoints; do not alter either approved frame. The user will attach both approved frame images manually in the external video service.";
+ document.getElementById("external-project").value=p.id;
+ document.getElementById("external-kind").value="video";
+ document.getElementById("external-category").value="video";refreshExternalProviders();
+ document.getElementById("external-prompt").value=base+continuity;
+ go("external");toast("Prompt video disiapkan dengan dua frame yang sudah disetujui. Lampirkan kedua gambar secara manual.");
+});
+function refreshFramePage(){refreshFrameProjects();if(document.getElementById("frame-project").value)loadFrameProject()}
+const originalGo=go;
+go=function(page){if(page==="frames")refreshFramePage();if(page==="pipeline")renderPipeline();originalGo(page)};
+refreshFrameProjects();
