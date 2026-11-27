@@ -1,4 +1,9 @@
-# PROMOVA AI — V1.11.0
+# PROMOVA AI — V1.12.0
+
+## V1.12.0
+- Hybrid AI Director: project-based advertising direction, editable scene storyboard, multi-character DNA continuity, external AI prompt workflow, JSON storyboard import, and scene-based video prompt preparation.
+- Preserves the local-first workflow and manual approval for production assets. No AI API or backend is claimed; AI storyboard generation runs through the selected external service.
+
 
 ## V1.11.0
 - Character Identity Lock with two visual references: Primary Master Character Sheet and Secondary Original Photo.
