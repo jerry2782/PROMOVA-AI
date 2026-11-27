@@ -1,4 +1,4 @@
-const CACHE="promova-ai-v1-9";
+const CACHE="promova-ai-v1-10";
 const ASSETS=["./","./index.html","./styles.css?v=1.2.1","./app.js?v=1.2.1","./manifest.webmanifest","./assets/icon.svg"];
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
