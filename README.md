@@ -1,8 +1,8 @@
-# PROMOVA AI — V1.7.0
+# PROMOVA AI — V1.7.1
 
 AI Content Production Studio — external AI workflow, local-first PWA.
 
-## V1.7.0
+## V1.7.1
 - Production Pipeline with four tracked stages: brief, image, video, and publishing.
 - External AI Studio launchpad for text, image, and video providers.
 - Per-project stage completion saved locally in the browser.
@@ -55,4 +55,4 @@ Aplikasi menyusun brief dan prompt untuk digunakan di layanan AI eksternal. Ia t
 - Analisis hanya berdasarkan informasi yang dimasukkan pengguna.
 - Verifikasi harga, klaim, hak cipta, tautan affiliate, dan disclosure tetap tanggung jawab pengguna.
 
-Versi: 1.7.0
+Versi: 1.7.1
