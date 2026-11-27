@@ -87,7 +87,11 @@ document.getElementById("character-open-ai").addEventListener("click",()=>{const
 document.getElementById("character-project").addEventListener("change",renderCharacterAssignments);
 document.getElementById("character-save-assignments").addEventListener("click",()=>{
  const p=projects.find(x=>x.id===document.getElementById("character-project").value);if(!p){toast("Pilih proyek terlebih dahulu");return}
- p.characterIds=[...document.querySelectorAll("#character-project-assignments input[type=checkbox]:checked")].map(x=>x.value);
+ const nextIds=[...document.querySelectorAll("#character-project-assignments input[type=checkbox]:checked")].map(x=>x.value);
+ const previousIds=p.characterIds||[];
+ const changed=nextIds.length!==previousIds.length||nextIds.some(id=>!previousIds.includes(id));
+ p.characterIds=nextIds;
+ if(changed&&p.framePlan){p.framePlan.firstApproved=false;p.framePlan.lastApproved=false;p.framePlan.firstPrompt="";p.framePlan.lastPrompt="";p.pipeline=p.pipeline||{};p.pipeline.image=false;p.pipeline.video=false;}
  p.characterAssignmentsUpdatedAt=new Date().toISOString();saveProjects();renderCharacterAssignments();renderFrameCharacterAssignments();toast(p.characterIds.length+" karakter disimpan ke proyek");
 });
 document.getElementById("character-library").addEventListener("click",e=>{
