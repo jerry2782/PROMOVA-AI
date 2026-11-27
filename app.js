@@ -79,15 +79,12 @@ function publishingText(){
 }
 function fillPublishingFromProject(p){
  if(!p)return;
- const content=String(p.content||"");
- const get=(label)=>{const re=new RegExp("(?:^|\\n)"+label.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\document.getElementById("workspace-projects").addEventListener("click",e=>{")+"\\s*\\n([\\s\\S]*?)(?=\\n[A-Z][A-Z &/-]{2,}\\s*\\n|$)","i");const m=content.match(re);return m?m[1].trim():""};
  document.getElementById("pub-name").value=p.title||"";
  document.getElementById("pub-platform").value=p.platform||"";
  document.getElementById("pub-title").value=p.title||"";
- const desc=get("Description")||get("Deskripsi")||"";
  const brief=String(p.brief||"");
  const descLine=brief.split("\n").find(x=>/^Deskripsi:/i.test(x));
- const facts=descLine?descLine.replace(/^Deskripsi:\s*/i,""):desc;
+ const facts=descLine?descLine.replace(/^Deskripsi:\s*/i,""):"";
  document.getElementById("pub-description").value=facts;
  document.getElementById("pub-caption").value="";
  document.getElementById("pub-voice").value="";
@@ -114,7 +111,7 @@ function generatePublishingDraft(){
 function savePublishingKit(){
  const p=selectedPublishingProject();if(!p){toast("Pilih proyek terlebih dahulu");return}
  const kit=publishingText();p.publishingKit=kit;p.publishingUpdatedAt=new Date().toISOString();
- p.content=(p.content||"").replace(/\\n\\nPUBLISHING KIT[\\s\\S]*$/,"").trim()+"\\n\\nPUBLISHING KIT\\n"+kit;
+ const marker="\\n\\nPUBLISHING KIT";const at=(p.content||"").indexOf(marker);p.content=(at>=0?p.content.slice(0,at):p.content||"").trim()+marker+"\\n"+kit;
  saveProjects();renderWorkspace();toast("Publishing Kit disimpan ke proyek");
 }
 document.getElementById("pub-load").addEventListener("click",()=>{const p=selectedPublishingProject();if(!p){toast("Pilih proyek terlebih dahulu");return}fillPublishingFromProject(p)});
