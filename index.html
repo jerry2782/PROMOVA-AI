@@ -309,6 +309,41 @@
           <div class="form-panel"><div class="panel-title"><span class="step-number">02</span><div><b>Character Library</b><small>Karakter tersimpan dan dapat digunakan ulang</small></div></div><div id="character-library" class="character-library"></div><div class="divider-line"></div><div class="panel-title"><span class="step-number">03</span><div><b>Gunakan karakter di proyek</b><small>Pilih proyek dan tetapkan satu atau beberapa karakter</small></div></div><label>Proyek produksi</label><select id="character-project"><option value="">Pilih proyek tersimpan...</option></select><div id="character-project-assignments" class="character-assignments"><p class="helper">Pilih proyek untuk mengatur karakter.</p></div><button type="button" class="primary-btn full" id="character-save-assignments">Simpan karakter ke proyek</button><div class="notice"><span>✦</span><div><b>DNA permanen tetap terlindungi</b><small>Outfit, ekspresi, pose, dan variasi adegan akan ditambahkan sebagai instruksi terpisah. Perubahan adegan tidak menimpa identitas utama karakter.</small></div></div></div>
         </div>
       </section>
+
+      <section class="page" id="page-director">
+        <div class="page-intro"><span class="eyebrow">HYBRID CREATIVE DIRECTION</span><h1>AI <em>Director</em></h1><p>Susun storyboard berbantuan AI, edit setiap adegan, dan siapkan prompt produksi yang menjaga identitas produk serta karakter.</p></div>
+        <div class="director-layout">
+          <div class="form-panel">
+            <div class="panel-title"><span class="step-number">01</span><div><b>Pilih proyek & arah produksi</b><small>Gunakan fakta dan referensi dari proyek tersimpan</small></div></div>
+            <label>Proyek produksi</label><select id="director-project"><option value="">Pilih proyek Content Production...</option></select>
+            <div id="director-project-summary" class="notice"><span>ⓘ</span><div><b>Belum ada proyek</b><small>Pilih proyek untuk memuat brief, produk, dan referensinya.</small></div></div>
+            <label>Durasi video</label><select id="director-duration"><option value="15">15 detik</option><option value="30" selected>30 detik</option><option value="45">45 detik</option><option value="60">60 detik</option><option value="90">90 detik</option></select>
+            <label>Jumlah adegan</label><select id="director-scene-count"><option>3</option><option selected>4</option><option>5</option><option>6</option><option>8</option></select>
+            <label>Gaya penyutradaraan</label><select id="director-style"><option>Affiliate UGC — natural, dekat, persuasif</option><option>Product Commercial — fokus produk dan detail visual</option><option>Cinematic Advertisement — sinematik dan dramatis</option><option>Lifestyle Storytelling — aktivitas sehari-hari</option><option>Review & Demonstration — informatif dan demonstratif</option></select>
+            <label>Format video</label><select id="director-ratio"><option>Vertical 9:16</option><option>Square 1:1</option><option>Landscape 16:9</option></select>
+            <div class="divider-line"></div>
+            <div class="panel-title"><span class="step-number">02</span><div><b>Karakter dalam iklan</b><small>Pilih satu atau beberapa karakter dari Character Library</small></div></div>
+            <div id="director-character-list" class="director-character-list"><p class="helper">Pilih proyek untuk melihat karakter yang tersedia.</p></div>
+            <div class="notice"><span>✦</span><div><b>Character DNA Lock</b><small>DNA permanen, Master Character Sheet, dan Original Photo tetap menjadi referensi identitas. Outfit, ekspresi, dan aksi diatur per adegan.</small></div></div>
+            <div class="director-actions"><button type="button" class="secondary-btn" id="director-draft-scenes">Buat draft adegan</button><button type="button" class="primary-btn" id="director-build-prompt">Susun prompt AI Director</button></div>
+          </div>
+          <div class="form-panel">
+            <div class="panel-title"><span class="step-number">03</span><div><b>AI Storyboard Assistant</b><small>Prompt dikirim secara manual ke layanan AI eksternal</small></div></div>
+            <label>Prompt AI Director</label><textarea id="director-ai-prompt" rows="11" placeholder="Pilih proyek lalu susun prompt AI Director."></textarea>
+            <div class="external-actions"><button type="button" class="primary-btn" id="director-copy-prompt">Salin prompt</button><button type="button" class="secondary-btn" id="director-open-ai">Buka AI eksternal ↗</button></div>
+            <label>Hasil storyboard AI (JSON)</label><textarea id="director-ai-result" rows="8" placeholder="Tempel hasil AI dalam format JSON sesuai instruksi prompt."></textarea>
+            <button type="button" class="secondary-btn full" id="director-import-ai">Impor storyboard AI ke editor</button>
+            <p class="helper">PROMOVA belum menjalankan model AI secara langsung. Salin prompt ke Gemini atau ChatGPT, lalu tempel hasil JSON di sini. Kamu tetap memeriksa dan menyetujui semua adegan.</p>
+          </div>
+        </div>
+        <div class="form-panel director-editor-panel">
+          <div class="panel-title"><span class="step-number">04</span><div><b>Scene Editor — kendali manual</b><small>Edit visual, dialog, kamera, pencahayaan, dan transisi setiap adegan</small></div></div>
+          <div id="director-scenes" class="director-scenes"><div class="character-empty">Pilih proyek lalu buat draft adegan atau impor storyboard AI.</div></div>
+          <div class="director-actions"><button type="button" class="secondary-btn" id="director-add-scene">＋ Tambah adegan</button><button type="button" class="primary-btn" id="director-save">Simpan storyboard ke proyek</button></div>
+          <div class="notice"><span>ⓘ</span><div><b>Continuity & approval</b><small>Perubahan daftar karakter akan membatalkan persetujuan First/Last Frame yang lama. Periksa kembali frame sebelum menyiapkan video.</small></div></div>
+          <button type="button" class="primary-btn full" id="director-prepare-video">Siapkan prompt video untuk AI External Studio</button>
+        </div>
+      </section>
       <footer class="footer">PROMOVA AI <span>•</span> Create responsibly. Promote transparently.</footer>
     </main>
   </div>
@@ -328,6 +363,7 @@
     <button data-page="workspace"><span>▣</span> Production Workspace</button>
     <button data-page="publishing"><span>↗</span> Publishing Kit</button>
     <button data-page="characters"><span>♙</span> Character DNA Studio</button>
+    <button data-page="director"><span>🎬</span> Hybrid AI Director</button>
     <button data-page="frames"><span>▧</span> First & Last Frame</button>
     <button data-page="pipeline"><span>⇢</span> Production Pipeline</button>
     <button data-page="external"><span>✧</span> AI External Studio</button>
@@ -336,5 +372,6 @@
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js?v=1.9.0"></script>
   <script src="character.js?v=1.2.0"></script>
+  <script src="director.js?v=1.12.0"></script>
 </body>
 </html>
