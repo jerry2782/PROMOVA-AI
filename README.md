@@ -1,6 +1,12 @@
-# PROMOVA AI — V1.7.1
+# PROMOVA AI — V1.8.0
 
 AI Content Production Studio — external AI workflow, local-first PWA.
+
+## V1.8.0
+- First & Last Frame Planner: separate opening and closing still-image prompts for each saved production project.
+- External image workflow: copy prompts, open an external image provider, and manually upload the generated first/last frames.
+- Manual approval for both frame images is required before the video prompt can be prepared in the Production Pipeline.
+- Approved frame images and approval states are stored with the local project and included in JSON backups.
 
 ## V1.7.1
 - Production Pipeline with four tracked stages: brief, image, video, and publishing.
@@ -55,4 +61,4 @@ Aplikasi menyusun brief dan prompt untuk digunakan di layanan AI eksternal. Ia t
 - Analisis hanya berdasarkan informasi yang dimasukkan pengguna.
 - Verifikasi harga, klaim, hak cipta, tautan affiliate, dan disclosure tetap tanggung jawab pengguna.
 
-Versi: 1.7.1
+Versi: 1.8.0
