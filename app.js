@@ -269,7 +269,8 @@ function renderPipeline(){
  const root=document.getElementById("pipeline-stages");
  if(!project){overview.innerHTML="<b>Pilih proyek untuk memulai.</b><small>Empat tahap produksi akan tampil setelah proyek dipilih.</small>";root.innerHTML="";return}
  if(!project.pipeline)project.pipeline={};
- const done=pipelineStages.filter(s=>project.pipeline[s.id]===true).length;
+ const frameGate=!!(project.framePlan?.firstImage&&project.framePlan?.lastImage&&project.framePlan?.firstApproved&&project.framePlan?.lastApproved);
+ const done=pipelineStages.filter(s=>s.id==="image"?frameGate:s.id==="video"?(frameGate&&project.pipeline.video===true):project.pipeline[s.id]===true).length;
  const percent=Math.round(done/pipelineStages.length*100);
  overview.innerHTML='<div class="pipeline-progress-head"><b>'+esc(project.title)+'</b><strong>'+percent+'%</strong></div><div class="pipeline-progress"><span style="width:'+percent+'%"></span></div><small>'+done+' dari '+pipelineStages.length+' tahap selesai · '+esc(project.type)+'</small>';
  root.innerHTML=pipelineStages.map((stage,index)=>{
@@ -369,6 +370,14 @@ document.getElementById("frame-project").addEventListener("change",loadFrameProj
 document.getElementById("frame-first-file").addEventListener("change",e=>handleFrameUpload("first",e.target.files[0]));
 document.getElementById("frame-last-file").addEventListener("change",e=>handleFrameUpload("last",e.target.files[0]));
 ["first","last"].forEach(which=>{
+ document.getElementById("frame-"+which+"-prompt").addEventListener("input",()=>{
+  const p=projects.find(x=>x.id===document.getElementById("frame-project").value);if(!p?.framePlan)return;
+  if(p.framePlan[which+"Approved"]){
+   p.framePlan[which+"Approved"]=false;p.pipeline=p.pipeline||{};p.pipeline.image=false;p.pipeline.video=false;
+   document.getElementById("frame-"+which+"-approve").checked=false;
+   saveProjects();updateFrameGate(p);toast("Prompt berubah. Persetujuan frame dibatalkan; periksa dan setujui ulang.");
+  }
+ });
  document.getElementById("frame-"+which+"-copy").addEventListener("click",()=>{const v=document.getElementById("frame-"+which+"-prompt").value.trim();if(!v){toast("Muat proyek terlebih dahulu");return}copyText(v)});
  document.getElementById("frame-"+which+"-open").addEventListener("click",()=>{const v=document.getElementById("frame-"+which+"-prompt").value.trim();if(!v){toast("Muat proyek terlebih dahulu");return}const provider=frameImageProviders[Number(document.getElementById("frame-image-provider").value)]||frameImageProviders[0];window.open(provider[1],"_blank","noopener,noreferrer");toast(provider[0]+" dibuka. Tempel prompt dan lampirkan referensi produk secara manual.")});
  document.getElementById("frame-"+which+"-approve").addEventListener("change",e=>{
@@ -404,5 +413,5 @@ document.getElementById("frame-video-prepare").addEventListener("click",()=>{
 });
 function refreshFramePage(){refreshFrameProjects();if(document.getElementById("frame-project").value)loadFrameProject()}
 const originalGo=go;
-go=function(page){if(page==="frames")refreshFramePage();if(page==="pipeline")renderPipeline();originalGo(page)};
+go=function(page){if(page==="frames")refreshFramePage();originalGo(page)};
 refreshFrameProjects();
