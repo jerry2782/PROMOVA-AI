@@ -11,7 +11,7 @@ function saveProjects(){localStorage.setItem(DB_KEY,JSON.stringify(projects));re
 function loadSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}catch{return {}}}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.classList.remove("show"),2300)}
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function go(page){if(page==="workspace"&&typeof renderWorkspace==="function")renderWorkspace();document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
+function go(page){if(page==="workspace"&&typeof renderWorkspace==="function")renderWorkspace();if(page==="publishing"&&typeof refreshPublishingProjects==="function")refreshPublishingProjects();document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();go(b.dataset.page)}});
 const moreToggle=document.getElementById("more-menu-toggle");
 const moreMenu=document.getElementById("more-menu");
@@ -65,6 +65,64 @@ function renderWorkspace(){
  const root=document.getElementById("workspace-projects");
  root.innerHTML=list.map(p=>{const hasPublishingKit=String(p.content||"").includes("PUBLISHING KIT");return `<article class="workspace-card"><div class="workspace-card-top"><span class="workspace-type">CONTENT PRODUCTION</span><span class="workspace-status">${esc(p.productionStatus||"Draft")}</span></div><h3>${esc(p.title)}</h3><p>${esc(p.platform||"Platform belum ditentukan")} · ${esc(p.style||"Style belum dipilih")}</p><div class="workspace-assets"><span>${p.imageData?"▧ Referensi tersedia":"＋ Tanpa referensi"}</span><span>✦ Brief & prompt</span>${hasPublishingKit?"<span>▤ Publishing kit</span>":"<span>＋ Publishing kit belum tersedia</span>"}</div><div class="workspace-actions"><button class="mini-btn" data-workspace-open="${esc(p.id)}">Buka paket</button><button class="mini-btn" data-workspace-status="${esc(p.id)}">${p.productionStatus==="Ready to publish"?"Tandai draft":"Siap publikasi"}</button></div></article>`}).join("")||`<div class="gallery-empty"><div class="gallery-empty-icon">▣</div><b>Belum ada paket produksi</b><p>Buat Content Production Pack untuk mulai mengelola proyek di sini.</p><button class="primary-btn" data-page="create">＋ Buat proyek pertama</button></div>`;
 }
+
+function publishingProjects(){return projects.filter(p=>p.type==="Content Production Pack")}
+function refreshPublishingProjects(){
+ const sel=document.getElementById("pub-project");if(!sel)return;
+ const chosen=sel.value;sel.innerHTML='<option value="">Pilih proyek Content Production...</option>'+publishingProjects().map(p=>`<option value="${esc(p.id)}">${esc(p.title)}</option>`).join("");
+ if(publishingProjects().some(p=>p.id===chosen))sel.value=chosen;
+}
+function selectedPublishingProject(){return projects.find(p=>p.id===document.getElementById("pub-project").value)}
+function publishingText(){
+ const fields=[["NAMA", "pub-name"],["PLATFORM","pub-platform"],["JUDUL","pub-title"],["CAPTION","pub-caption"],["VOICE-OVER","pub-voice"],["CTA","pub-cta"],["DESKRIPSI","pub-description"],["LINK","pub-link"],["HASHTAG","pub-tags"]];
+ return fields.map(([label,id])=>label+"\n"+document.getElementById(id).value.trim()).join("\n\n")+"\n\nDISCLOSURE\n"+(document.getElementById("pub-disclosure").checked?"Konten mengandung tautan afiliasi atau promosi berbayar bila relevan.":"Periksa kewajiban disclosure sebelum publikasi.");
+}
+function fillPublishingFromProject(p){
+ if(!p)return;
+ const content=String(p.content||"");
+ const get=(label)=>{const re=new RegExp("(?:^|\\n)"+label.replace(/[.*+?^${}()|[\\]\\\\]/g,"\\document.getElementById("workspace-projects").addEventListener("click",e=>{")+"\\s*\\n([\\s\\S]*?)(?=\\n[A-Z][A-Z &/-]{2,}\\s*\\n|$)","i");const m=content.match(re);return m?m[1].trim():""};
+ document.getElementById("pub-name").value=p.title||"";
+ document.getElementById("pub-platform").value=p.platform||"";
+ document.getElementById("pub-title").value=p.title||"";
+ const desc=get("Description")||get("Deskripsi")||"";
+ const brief=String(p.brief||"");
+ const descLine=brief.split("\n").find(x=>/^Deskripsi:/i.test(x));
+ const facts=descLine?descLine.replace(/^Deskripsi:\s*/i,""):desc;
+ document.getElementById("pub-description").value=facts;
+ document.getElementById("pub-caption").value="";
+ document.getElementById("pub-voice").value="";
+ document.getElementById("pub-cta").value="Lihat informasi selengkapnya melalui tautan yang tersedia.";
+ document.getElementById("pub-link").value="";
+ const slug=(p.title||"konten").toLowerCase().replace(/[^a-z0-9]+/g,"");
+ document.getElementById("pub-tags").value="#"+(p.platform||"konten").toLowerCase().replace(/[^a-z0-9]+/g,"")+" #rekomendasi #"+slug;
+ toast("Data proyek dimuat. Susun draft untuk membuat materi publikasi.");
+}
+function generatePublishingDraft(){
+ const p=selectedPublishingProject();if(!p){toast("Pilih proyek terlebih dahulu");return}
+ const name=document.getElementById("pub-name").value.trim()||p.title;
+ const facts=document.getElementById("pub-description").value.trim();
+ const platform=document.getElementById("pub-platform").value.trim()||p.platform||"Platform belum ditentukan";
+ const caption=facts?`Sedang mencari informasi tentang ${name}?\\n\\n${facts}\\n\\nSimpan atau bagikan konten ini jika bermanfaat.\\n\\n#${platform.toLowerCase().replace(/[^a-z0-9]+/g,"")} #rekomendasi`:`${name}\\n\\n[Tambahkan fakta dan manfaat yang sudah diverifikasi sebelum publikasi.]\\n\\n#rekomendasi`;
+ document.getElementById("pub-name").value=name;
+ document.getElementById("pub-platform").value=platform;
+ document.getElementById("pub-title").value=name+" — informasi produk";
+ document.getElementById("pub-caption").value=caption;
+ document.getElementById("pub-voice").value=facts?`Kenali ${name}. ${facts} Periksa informasi lengkap melalui tautan yang tersedia.`:`Kenali ${name}. [Tambahkan informasi yang sudah diverifikasi sebelum direkam.]`;
+ document.getElementById("pub-cta").value="Cek informasi dan detail selengkapnya melalui tautan yang tersedia.";
+ toast("Draft publikasi berhasil disusun. Periksa dan edit sebelum digunakan.");
+}
+function savePublishingKit(){
+ const p=selectedPublishingProject();if(!p){toast("Pilih proyek terlebih dahulu");return}
+ const kit=publishingText();p.publishingKit=kit;p.publishingUpdatedAt=new Date().toISOString();
+ p.content=(p.content||"").replace(/\\n\\nPUBLISHING KIT[\\s\\S]*$/,"").trim()+"\\n\\nPUBLISHING KIT\\n"+kit;
+ saveProjects();renderWorkspace();toast("Publishing Kit disimpan ke proyek");
+}
+document.getElementById("pub-load").addEventListener("click",()=>{const p=selectedPublishingProject();if(!p){toast("Pilih proyek terlebih dahulu");return}fillPublishingFromProject(p)});
+document.getElementById("pub-generate").addEventListener("click",generatePublishingDraft);
+document.getElementById("pub-save").addEventListener("click",savePublishingKit);
+document.getElementById("pub-copy").addEventListener("click",()=>{const text=publishingText();if(!document.getElementById("pub-name").value.trim()){toast("Lengkapi nama kampanye terlebih dahulu");return}copyText(text)});
+document.getElementById("pub-project").addEventListener("change",()=>{const p=selectedPublishingProject();if(p)fillPublishingFromProject(p)});
+
 document.getElementById("workspace-projects").addEventListener("click",e=>{
  const open=e.target.closest("[data-workspace-open]");if(open){const p=projects.find(x=>x.id===open.dataset.workspaceOpen);if(p){showProject(p);go("projects")}return}
  const status=e.target.closest("[data-workspace-status]");if(status){const p=projects.find(x=>x.id===status.dataset.workspaceStatus);if(p){p.productionStatus=p.productionStatus==="Ready to publish"?"Draft":"Ready to publish";saveProjects();renderWorkspace();toast("Status produksi diperbarui")}}
