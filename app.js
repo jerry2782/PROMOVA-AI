@@ -11,7 +11,7 @@ function saveProjects(){localStorage.setItem(DB_KEY,JSON.stringify(projects));re
 function loadSettings(){try{return JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}catch{return {}}}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.classList.remove("show"),2300)}
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function go(page){if(page==="workspace"&&typeof renderWorkspace==="function")renderWorkspace();if(page==="publishing"&&typeof refreshPublishingProjects==="function")refreshPublishingProjects();if(page==="external"&&typeof refreshExternalProjects==="function")refreshExternalProjects();document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
+function go(page){if(page==="workspace"&&typeof renderWorkspace==="function")renderWorkspace();if(page==="publishing"&&typeof refreshPublishingProjects==="function")refreshPublishingProjects();if(page==="external"&&typeof refreshExternalProjects==="function")refreshExternalProjects();if(page==="pipeline"&&typeof renderPipeline==="function")renderPipeline();document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();go(b.dataset.page)}});
 const moreToggle=document.getElementById("more-menu-toggle");
 const moreMenu=document.getElementById("more-menu");
@@ -232,3 +232,62 @@ document.getElementById("external-open").addEventListener("click",()=>{
 });
 refreshExternalProjects();
 refreshExternalProviders();
+
+
+// PROMOVA AI V1.7 — persistent, local-first production pipeline
+const pipelineStages=[
+ {id:"brief",title:"Brief & strategi",kind:"master",category:"text",description:"Tinjau strategi, sudut konten, hook, caption, dan arahan produksi."},
+ {id:"image",title:"Produksi gambar",kind:"image",category:"image",description:"Gunakan prompt gambar dan lampirkan foto referensi produk bila tersedia."},
+ {id:"video",title:"Produksi video",kind:"video",category:"video",description:"Buat video berdasarkan storyboard, prompt, dan konsistensi visual."},
+ {id:"publishing",title:"Publishing Kit",kind:"publishing",category:"text",description:"Siapkan caption akhir, CTA, tautan, hashtag, dan disclosure."}
+];
+function refreshPipelineProjects(){
+ const sel=document.getElementById("pipeline-project");if(!sel)return;
+ const old=sel.value;
+ sel.innerHTML='<option value="">Pilih proyek tersimpan...</option>'+projects.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.title)+' — '+esc(p.type)+'</option>').join("");
+ if(projects.some(p=>p.id===old))sel.value=old;
+}
+function pipelinePrompt(project,stage){
+ if(stage.id==="publishing"&&project.publishingKit)return project.publishingKit;
+ return extractExternalPrompt(project,stage.kind);
+}
+function renderPipeline(){
+ refreshPipelineProjects();
+ const sel=document.getElementById("pipeline-project");
+ const project=projects.find(p=>p.id===sel.value);
+ const overview=document.getElementById("pipeline-overview");
+ const root=document.getElementById("pipeline-stages");
+ if(!project){overview.innerHTML="<b>Pilih proyek untuk memulai.</b><small>Empat tahap produksi akan tampil setelah proyek dipilih.</small>";root.innerHTML="";return}
+ if(!project.pipeline)project.pipeline={};
+ const done=pipelineStages.filter(s=>project.pipeline[s.id]===true).length;
+ const percent=Math.round(done/pipelineStages.length*100);
+ overview.innerHTML='<div class="pipeline-progress-head"><b>'+esc(project.title)+'</b><strong>'+percent+'%</strong></div><div class="pipeline-progress"><span style="width:'+percent+'%"></span></div><small>'+done+' dari '+pipelineStages.length+' tahap selesai · '+esc(project.type)+'</small>';
+ root.innerHTML=pipelineStages.map((stage,index)=>{
+  const complete=project.pipeline[stage.id]===true;
+  const prompt=pipelinePrompt(project,stage);
+  const unavailable=prompt.startsWith("Materi ")&&prompt.includes("belum ditemukan");
+  return '<article class="pipeline-stage '+(complete?"is-complete":"")+'"><div class="pipeline-stage-top"><span class="step-number">'+String(index+1).padStart(2,"0")+'</span><div class="pipeline-stage-copy"><b>'+stage.title+'</b><small>'+stage.description+'</small></div><span class="pipeline-state">'+(complete?"Selesai":"Belum")+'</span></div><div class="pipeline-stage-actions"><button type="button" class="secondary-btn" data-pipeline-prepare="'+stage.id+'" '+(unavailable?"disabled":"")+'>Siapkan tahap ↗</button><label class="pipeline-done"><input type="checkbox" data-pipeline-done="'+stage.id+'" '+(complete?"checked":"")+'> Tandai selesai</label></div>'+(unavailable?'<p class="helper">Prompt tahap ini belum tersedia pada proyek. Buat Content Production Pack terlebih dahulu.</p>':"")+'</article>';
+ }).join("");
+}
+document.getElementById("pipeline-project").addEventListener("change",renderPipeline);
+document.getElementById("pipeline-stages").addEventListener("change",e=>{
+ const checkbox=e.target.closest("[data-pipeline-done]");if(!checkbox)return;
+ const project=projects.find(p=>p.id===document.getElementById("pipeline-project").value);if(!project)return;
+ project.pipeline=project.pipeline||{};project.pipeline[checkbox.dataset.pipelineDone]=checkbox.checked;
+ project.pipelineUpdatedAt=new Date().toISOString();localStorage.setItem(DB_KEY,JSON.stringify(projects));renderPipeline();
+ toast(checkbox.checked?"Tahap ditandai selesai":"Status tahap diperbarui");
+});
+document.getElementById("pipeline-stages").addEventListener("click",e=>{
+ const button=e.target.closest("[data-pipeline-prepare]");if(!button)return;
+ const project=projects.find(p=>p.id===document.getElementById("pipeline-project").value);if(!project)return;
+ const stage=pipelineStages.find(s=>s.id===button.dataset.pipelinePrepare);if(!stage)return;
+ document.getElementById("external-project").value=project.id;
+ document.getElementById("external-kind").value=stage.kind;
+ document.getElementById("external-category").value=stage.category;
+ refreshExternalProviders();
+ document.getElementById("external-prompt").value=pipelinePrompt(project,stage);
+ go("external");
+ toast("Tahap "+stage.title+" siap dibawa ke layanan AI eksternal");
+});
+document.getElementById("pipeline-project").addEventListener("focus",refreshPipelineProjects);
+refreshPipelineProjects();
