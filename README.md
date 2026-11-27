@@ -1,4 +1,14 @@
-# PROMOVA AI — V1.12.0
+# PROMOVA AI — V2.0.0
+
+## V2.0.0 — Hybrid AI Director 2.0
+- Scene-by-scene video prompt mode: each storyboard scene receives its own standalone production prompt.
+- Strict Continuity Lock for product identity, character DNA, wardrobe baseline, location, lighting direction, color grade, screen direction and physical action.
+- Manual per-scene prompt approval is required before sending a scene to AI External Studio.
+- Scene prompts and approval status are stored with the local project.
+- Editing storyboard fields invalidates previous prompt approvals; edited prompts must be reviewed again.
+- External image/video generation remains manual. Product and character reference images must be attached by the user.
+
+## V1.12.0
 
 ## V1.12.0
 - Hybrid AI Director: project-based advertising direction, editable scene storyboard, multi-character DNA continuity, external AI prompt workflow, JSON storyboard import, and scene-based video prompt preparation.
