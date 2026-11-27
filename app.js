@@ -49,8 +49,8 @@ function renderWorkspace(){
  let migrated=false;
  list.forEach(p=>{
    const source=String(p.brief||p.content||"");
-   if(!p.platform){const m=source.match(/(?:Primary platform|Platform):\\s*([^\\n]+)/i);if(m){p.platform=m[1].trim();migrated=true}}
-   if(!p.style){const m=source.match(/(?:Visual style preset|Gaya visual):\\s*([^\\n]+)/i);if(m){p.style=m[1].trim();migrated=true}}
+   if(!p.platform){const m=source.match(/(?:Primary platform|Platform):\s*([^\n]+)/i);if(m){p.platform=m[1].trim();migrated=true}}
+   if(!p.style){const m=source.match(/(?:Visual style preset|Gaya visual):\s*([^\n]+)/i);if(m){p.style=m[1].trim();migrated=true}}
    if(!p.productionStatus){p.productionStatus="Draft";migrated=true}
  });
  if(migrated)localStorage.setItem(DB_KEY,JSON.stringify(projects));
