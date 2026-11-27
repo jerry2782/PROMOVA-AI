@@ -45,15 +45,21 @@ document.getElementById("all-projects").innerHTML=projects.map(card).join("");do
 document.addEventListener("click",e=>{const f=e.target.closest("[data-gallery-filter]");if(f){galleryFilter=f.dataset.galleryFilter;renderProjects()}});
 function renderWorkspace(){
  const list=projects.filter(p=>p.type==="Content Production Pack");
- // Migrate older V1.3 packs by recovering their platform/style from the saved brief.
  let migrated=false;
  list.forEach(p=>{
-   const source=String(p.brief||p.content||"");
-   if(!p.platform){const m=source.match(/(?:Primary platform|Platform):\s*([^\n]+)/i);if(m){p.platform=m[1].trim();migrated=true}}
-   if(!p.style){const m=source.match(/(?:Visual style preset|Gaya visual):\s*([^\n]+)/i);if(m){p.style=m[1].trim();migrated=true}}
+   // Older projects stored their metadata in the brief and/or full prompt text.
+   const source=[p.brief,p.content].filter(Boolean).join("\\n");
+   if(!p.platform){
+     const m=source.match(/(?:Primary platform|Platform):\\s*([^\\n]+)/i);
+     if(m){p.platform=m[1].trim();migrated=true}
+   }
+   if(!p.style){
+     const m=source.match(/(?:Visual style preset|Gaya visual):\\s*([^\\n]+)/i);
+     if(m){p.style=m[1].trim();migrated=true}
+   }
    if(!p.productionStatus){p.productionStatus="Draft";migrated=true}
  });
- if(migrated)localStorage.setItem(DB_KEY,JSON.stringify(projects));
+ if(migrated)saveProjects();
  const stats=[["TOTAL PAKET",list.length],["DENGAN REFERENSI",list.filter(p=>!!p.imageData).length],["SIAP PUBLIKASI",list.filter(p=>p.productionStatus==="Ready to publish").length]];
  document.getElementById("workspace-stats").innerHTML=stats.map(x=>`<div class="workspace-stat"><small>${x[0]}</small><b>${x[1]}</b></div>`).join("");
  const root=document.getElementById("workspace-projects");
