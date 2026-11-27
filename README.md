@@ -72,4 +72,4 @@ Aplikasi menyusun brief dan prompt untuk digunakan di layanan AI eksternal. Ia t
 - Analisis hanya berdasarkan informasi yang dimasukkan pengguna.
 - Verifikasi harga, klaim, hak cipta, tautan affiliate, dan disclosure tetap tanggung jawab pengguna.
 
-Versi: 1.8.0
+Versi: 1.12.0
