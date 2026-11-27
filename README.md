@@ -1,3 +1,13 @@
+# PROMOVA AI — V2.4.2
+
+## V2.4.2 — Movie Poster Promo Fixed 10-Second Segments
+- Opening is fixed at 10 seconds.
+- Every individual movie showcase is fixed at 10 seconds.
+- Closing is fixed at 10 seconds.
+- Total target duration is calculated automatically: 20 seconds + 10 seconds per movie poster.
+- Opening and closing prompts explicitly require the exact uploaded SAMS Studio logo as a visible reference; if the video model cannot preserve it, use the original logo image as an editor overlay.
+- External video providers may return shorter or longer clips than requested; use extend/generate-to-duration where supported or extend the background and overlay the logo in an editor.
+
 # PROMOVA AI — V2.4.1
 
 ## V2.4.1 — Movie Poster Promo Video Director 2.1
