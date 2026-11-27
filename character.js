@@ -83,7 +83,7 @@ document.getElementById("character-form").addEventListener("submit",e=>{
  catch(err){characters=characters.filter(x=>x.id!==item.id);toast("Penyimpanan penuh. Kurangi ukuran atau jumlah foto karakter.")}
 });
 document.getElementById("character-copy-prompt").addEventListener("click",()=>{const v=document.getElementById("character-prompt").value.trim();if(!v){toast("Susun prompt karakter terlebih dahulu");return}copyText(v)});
-document.getElementById("character-open-ai").addEventListener("click",()=>{const v=document.getElementById("character-prompt").value.trim();if(!v){toast("Susun prompt karakter terlebih dahulu");return}window.open("https://gemini.google.com/app","_blank","noopener,noreferrer");toast("Google Gemini dibuka. Tempel prompt dan lampirkan foto karakter jika tersedia.")});
+document.getElementById("character-open-ai").addEventListener("click",()=>{const v=document.getElementById("character-prompt").value.trim();if(!v){toast("Susun prompt karakter terlebih dahulu");return}const providers={gemini:["Google Gemini","https://gemini.google.com/app"],chatgpt:["ChatGPT Images","https://chatgpt.com/"],canva:["Canva","https://www.canva.com/"]};const provider=providers[document.getElementById("character-image-provider").value]||providers.gemini;window.open(provider[1],"_blank","noopener,noreferrer");toast(provider[0]+" dibuka. Tempel prompt dan lampirkan foto karakter jika tersedia.")});
 document.getElementById("character-project").addEventListener("change",renderCharacterAssignments);
 document.getElementById("character-save-assignments").addEventListener("click",()=>{
  const p=projects.find(x=>x.id===document.getElementById("character-project").value);if(!p){toast("Pilih proyek terlebih dahulu");return}
