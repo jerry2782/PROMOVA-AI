@@ -7,6 +7,7 @@ const n=document.createElement("button");n.className="nav-item";n.dataset.page="
 const qg=document.querySelector(".quick-grid");if(qg){const q=document.createElement("button");q.className="quick-card";q.dataset.page="movie-promo";q.innerHTML='<span class="quick-icon purple">🎞</span><b>Movie Poster Promo</b><small>Poster film, jadwal tayang & presenter</small><span class="card-arrow">↗</span>';qg.append(q)}
 const page=$("page-movie-promo");if(!page){console.error("Movie Poster Promo static page missing");return;}
 const css=document.createElement("style");css.textContent='.movie-promo-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.9fr);gap:16px;align-items:start}.mp-preview{min-height:70px;border:1px dashed #72528e;border-radius:10px;padding:10px;margin-top:8px;color:var(--muted);font-size:11px;display:flex;align-items:center;gap:12px}.mp-preview img{max-width:105px;max-height:90px;object-fit:contain;border-radius:7px}.mp-poster{border:1px solid var(--line);background:#171022;border-radius:12px;padding:13px;margin:12px 0}.mp-poster-head{display:flex;justify-content:space-between;gap:8px}.mp-poster-head b{font-size:12px}.mp-remove{border:0;background:#3b1b2a;color:#ffb7c4;border-radius:8px;padding:7px 9px}.mp-poster img{max-width:100%;max-height:130px;object-fit:contain;display:block;margin:8px auto}.mp-schedule{border:1px solid var(--line);padding:12px;border-radius:10px;margin:10px 0}.mp-schedule b{font-size:12px}.mp-schedule p{font-size:11px;line-height:1.6;color:var(--muted)}.mp-badge{font-size:9px;color:#d8bcff;background:#302044;padding:5px 8px;border-radius:20px}@media(max-width:800px){.movie-promo-layout{grid-template-columns:1fr}}';document.head.append(css);
+const sourceStyle=document.createElement("style");sourceStyle.textContent='.mp-source-choices{display:grid;grid-template-columns:1fr;gap:8px;margin:10px 0 16px}.mp-source-choice{width:100%;padding:13px 14px;border:1px solid var(--line,#49365b);border-radius:12px;background:#1b1125;color:var(--text,#f5efff);text-align:left;font:inherit}.mp-source-choice.active{border-color:#a855f7;background:#302044;box-shadow:0 0 0 1px #a855f7}.mp-source-choice:focus-visible{outline:2px solid #c084fc;outline-offset:2px}';document.head.append(sourceStyle);
 let logoData="",characterData="",seq=0;
 function compress(file,max=1400){return new Promise((resolve,reject)=>{if(!file||!file.type.startsWith("image/"))return reject(Error("Pilih file gambar."));const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const z=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*z);c.height=Math.round(im.height*z);c.getContext("2d").drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL("image/jpeg",.78))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
 function prev(el,data,label){el.innerHTML=data?'<img src="'+data+'" alt="Preview"><span>'+esc(label)+'</span>':"Belum ada gambar"}
@@ -32,20 +33,19 @@ function source(){
 const mode=$("mp-character-source").value;
 const library=$("mp-library-wrap"),upload=$("mp-upload-wrap");
 const showLibrary=mode==="library",showUpload=mode==="upload"||mode==="mascot";
-library.classList.toggle("hidden",!showLibrary);
-upload.classList.toggle("hidden",!showUpload);
-library.style.display=showLibrary?"block":"none";
-upload.style.display=showUpload?"block":"none";
+library.classList.toggle("hidden",!showLibrary);upload.classList.toggle("hidden",!showUpload);
+library.style.setProperty("display",showLibrary?"block":"none","important");
+upload.style.setProperty("display",showUpload?"block":"none","important");
 const uploadLabel=upload.querySelector("label");
 if(uploadLabel)uploadLabel.textContent=mode==="mascot"?"Upload gambar maskot perusahaan":"Upload foto / gambar karakter";
-const helper=library.querySelector(".helper");
-if(helper)helper.textContent="Karakter diambil dari Character DNA Studio pada perangkat/browser yang sama.";
+const file=$("mp-character-file");file.setAttribute("accept","image/*");
+document.querySelectorAll("[data-mp-source]").forEach(b=>b.classList.toggle("active",b.dataset.mpSource===mode));
 if(showLibrary)refreshChars();
 }
 window.mpUpdateCharacterSource=source;
-$("mp-character-source").addEventListener("change",source,true);
-$("mp-character-source").addEventListener("input",source,true);
-$("mp-character-source").addEventListener("blur",source,true);
+window.mpSetCharacterSource=mode=>{$("mp-character-source").value=mode;source()};
+document.querySelectorAll("[data-mp-source]").forEach(b=>b.addEventListener("click",()=>window.mpSetCharacterSource(b.dataset.mpSource)));
+$("mp-character-source").addEventListener("change",source);
 $("mp-logo").addEventListener("change",async e=>{try{logoData=await compress(e.target.files[0]);prev($("mp-logo-preview"),logoData,"Logo perusahaan")}catch(x){toast(x.message)}});
 $("mp-character-file").addEventListener("change",async e=>{try{characterData=await compress(e.target.files[0]);prev($("mp-character-preview"),characterData,"Referensi karakter")}catch(x){toast(x.message)}});
 $("mp-add-poster").addEventListener("click",()=>addPoster());
