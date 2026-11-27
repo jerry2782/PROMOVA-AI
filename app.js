@@ -12,6 +12,12 @@ function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t
 function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function go(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();go(b.dataset.page)}});
+const moreToggle=document.getElementById("more-menu-toggle");
+const moreMenu=document.getElementById("more-menu");
+moreToggle.addEventListener("click",()=>{const open=moreMenu.classList.toggle("hidden")===false;moreToggle.setAttribute("aria-expanded",String(open))});
+document.getElementById("more-menu-close").addEventListener("click",()=>{moreMenu.classList.add("hidden");moreToggle.setAttribute("aria-expanded","false")});
+moreMenu.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){moreMenu.classList.add("hidden");moreToggle.setAttribute("aria-expanded","false")}});
+
 function saveProject(title,type,content,extra={}){const p={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),title,type,content,createdAt:new Date().toISOString(),...extra};projects.unshift(p);saveProjects();toast("Proyek berhasil disimpan");return p}
 function copyText(text){if(navigator.clipboard?.writeText){navigator.clipboard.writeText(text).then(()=>toast("Berhasil disalin")).catch(()=>fallbackCopy(text))}else fallbackCopy(text)}
 function fallbackCopy(text){const a=document.createElement("textarea");a.value=text;document.body.appendChild(a);a.select();try{document.execCommand("copy");toast("Berhasil disalin")}catch{toast("Tidak dapat menyalin otomatis")}a.remove()}
