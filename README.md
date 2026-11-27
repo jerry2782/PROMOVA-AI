@@ -1,6 +1,11 @@
-# PROMOVA AI — MVP 1.0
+# PROMOVA AI — MVP 1.1
 
-AI Content Production Studio — local-first PWA.
+AI Content Production Studio — external AI workflow, local-first PWA.
+
+## V1.1
+- Content production pack: brief, master prompt, image prompt, video prompt.
+- Upload and preview product reference images from mobile gallery.
+- Image compression in browser before preview.
 
 ## Fitur
 - Content brief & AI prompt builder
