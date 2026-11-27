@@ -128,8 +128,11 @@ framePromptsFor=function(p){
 const originalExtractExternalPrompt=extractExternalPrompt;
 extractExternalPrompt=function(project,kind){
  const base=originalExtractExternalPrompt(project,kind);
- if(kind!=="video"||!getProjectCharacters(project).length)return base;
- return base+"\n\n"+ "APPROVED CHARACTER DNA — VIDEO CONTINUITY LOCK\n"+selectedCharacterSummary(project)+"\nCHARACTER CONTINUITY: Keep every assigned character's face, hair, skin tone, body proportions and recognizable identity consistent in every shot. Do not blend, duplicate, replace or redesign characters. Preserve scene-specific outfit and action instructions. Attach both approved references manually for each assigned character: (1) Master Character Sheet as PRIMARY identity source, (2) Original Photo as SECONDARY supporting reference. The Master Sheet has priority if references appear inconsistent.";
+ const list=getProjectCharacters(project);
+ if(!["image","video"].includes(kind)||!list.length)return base;
+ const heading=kind==="video"?"APPROVED CHARACTER DNA — VIDEO CONTINUITY LOCK":"APPROVED CHARACTER DNA — IMAGE IDENTITY LOCK";
+ const instruction=kind==="video"?"CHARACTER CONTINUITY: Keep every assigned character's face, hair, skin tone, body proportions and recognizable identity consistent in every shot. Do not blend, duplicate, replace or redesign characters. Preserve scene-specific outfit and action instructions.":"IMAGE COMPOSITION: Depict each assigned character according to the approved DNA. Preserve facial identity, hair, skin tone, body proportions and recognizable features. Do not blend, duplicate, replace or redesign characters. Apply only the scene-specific pose, expression and wardrobe requested by the project.";
+ return base+"\n\n"+heading+"\n"+selectedCharacterSummary(project)+"\n"+instruction+" Attach both approved references manually for each assigned character: (1) Master Character Sheet as PRIMARY identity source, (2) Original Photo as SECONDARY supporting reference. The Master Sheet has priority if references appear inconsistent.";
 };
 const originalLoadFrameProject=loadFrameProject;
 loadFrameProject=function(){originalLoadFrameProject();renderFrameCharacterAssignments()};
