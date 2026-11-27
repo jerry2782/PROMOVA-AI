@@ -317,8 +317,8 @@
             <div class="panel-title"><span class="step-number">01</span><div><b>Pilih proyek & arah produksi</b><small>Gunakan fakta dan referensi dari proyek tersimpan</small></div></div>
             <label>Proyek produksi</label><select id="director-project"><option value="">Pilih proyek Content Production...</option></select>
             <div id="director-project-summary" class="notice"><span>ⓘ</span><div><b>Belum ada proyek</b><small>Pilih proyek untuk memuat brief, produk, dan referensinya.</small></div></div>
-            <label>Durasi video</label><select id="director-duration"><option value="15">15 detik</option><option value="30" selected>30 detik</option><option value="45">45 detik</option><option value="60">60 detik</option><option value="90">90 detik</option></select>
-            <label>Jumlah adegan</label><select id="director-scene-count"><option>3</option><option selected>4</option><option>5</option><option>6</option><option>8</option></select>
+            <label>Durasi video</label><input id="director-duration" type="number" min="8" max="300" step="1" value="15" inputmode="numeric"><p class="helper">Masukkan durasi total video dalam detik (minimal 8, maksimal 300).</p>
+            <label>Jumlah adegan</label><input id="director-scene-count" type="number" min="1" max="100" step="1" value="1" inputmode="numeric"><p class="helper">Masukkan jumlah scene secara manual. Bisa 1, 2, 3, dan seterusnya (maksimal 100 scene).</p>
             <label>Gaya penyutradaraan</label><select id="director-style"><option>Affiliate UGC — natural, dekat, persuasif</option><option>Product Commercial — fokus produk dan detail visual</option><option>Cinematic Advertisement — sinematik dan dramatis</option><option>Lifestyle Storytelling — aktivitas sehari-hari</option><option>Review & Demonstration — informatif dan demonstratif</option></select>
             <label>Format video</label><select id="director-ratio"><option>Vertical 9:16</option><option>Square 1:1</option><option>Landscape 16:9</option></select>
             <div class="divider-line"></div>
@@ -372,7 +372,7 @@
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js?v=1.12.0"></script>
   <script src="character.js?v=1.2.0"></script>
-  <script src="director.js?v=1.12.0"></script>
+  <script src="director.js?v=2.2.0"></script>
   <script src="director-v2.js?v=2.1.0"></script>
 </body>
 </html>
