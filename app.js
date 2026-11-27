@@ -179,3 +179,56 @@ document.getElementById("clear-data").addEventListener("click",()=>{if(confirm("
 const settings=loadSettings();document.getElementById("setting-brand").value=settings.brand||"";document.getElementById("setting-bio").value=settings.bio||"";
 renderProjects();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+
+
+// PROMOVA AI V1.6 — External AI launchpad (no embedded API keys)
+const externalProviders={
+ text:[["ChatGPT","https://chatgpt.com/"],["Google Gemini","https://gemini.google.com/app"],["Claude","https://claude.ai/new"]],
+ image:[["ChatGPT Images","https://chatgpt.com/"],["Google Gemini","https://gemini.google.com/app"],["Canva","https://www.canva.com/"]],
+ video:[["Google Flow","https://labs.google/fx/tools/flow"],["Kling AI","https://klingai.com/"],["Runway","https://app.runwayml.com/"]]
+};
+function refreshExternalProjects(){
+ const sel=document.getElementById("external-project");if(!sel)return;
+ const chosen=sel.value;sel.innerHTML='<option value="">Pilih proyek tersimpan...</option>'+projects.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.title)+' — '+esc(p.type)+'</option>').join("");
+ if(projects.some(p=>p.id===chosen))sel.value=chosen;
+}
+function refreshExternalProviders(){
+ const category=document.getElementById("external-category").value;
+ const sel=document.getElementById("external-provider"),current=sel.value;
+ sel.innerHTML=externalProviders[category].map((p,i)=>'<option value="'+i+'">'+p[0]+'</option>').join("");
+ if(current!==""&&Number(current)<externalProviders[category].length)sel.value=current;
+}
+function extractExternalPrompt(project,kind){
+ const content=String(project.content||"");
+ if(kind==="all")return content;
+ const labels={master:"MASTER CONTENT PRODUCTION PROMPT",image:"IMAGE PROMPT",video:"VIDEO GENERATION PROMPT",publishing:"PUBLISHING KIT"};
+ const label=labels[kind];
+ const escaped=label.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+ const match=content.match(new RegExp("(?:^|\\n)"+escaped+"\\s*\\n([\\s\\S]*?)(?=\\n\\n[A-Z][A-Z &/-]{3,}\\n|$)","i"));
+ if(match)return match[1].trim();
+ if(kind==="master"&&content.trim())return content;
+ return "Materi "+label+" belum ditemukan pada proyek ini. Buat ulang paket konten atau tempelkan prompt di kolom ini.";
+}
+document.getElementById("external-load").addEventListener("click",()=>{
+ const p=projects.find(x=>x.id===document.getElementById("external-project").value);
+ if(!p){toast("Pilih proyek terlebih dahulu");return}
+ document.getElementById("external-prompt").value=extractExternalPrompt(p,document.getElementById("external-kind").value);
+ toast("Materi proyek dimuat. Periksa prompt sebelum digunakan.");
+});
+document.getElementById("external-category").addEventListener("change",refreshExternalProviders);
+document.getElementById("external-copy").addEventListener("click",()=>{
+ const value=document.getElementById("external-prompt").value.trim();
+ if(!value){toast("Muat atau tulis prompt terlebih dahulu");return}
+ copyText(value);
+});
+document.getElementById("external-open").addEventListener("click",()=>{
+ const value=document.getElementById("external-prompt").value.trim();
+ if(!value){toast("Muat atau tulis prompt terlebih dahulu");return}
+ const category=document.getElementById("external-category").value;
+ const provider=externalProviders[category][Number(document.getElementById("external-provider").value)];
+ if(!provider){toast("Pilih layanan AI");return}
+ window.open(provider[1],"_blank","noopener,noreferrer");
+ toast("Layanan dibuka. Tempel prompt dan lampirkan foto referensi secara manual.");
+});
+refreshExternalProjects();
+refreshExternalProviders();
