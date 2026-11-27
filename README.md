@@ -1,4 +1,11 @@
-# PROMOVA AI — V2.0.0
+# PROMOVA AI — V2.1.0
+
+## V2.1.0 — Sequential First Frame Continuity
+- First Frame Only: one opening reference image per scene; no required Last Frame.
+- Flow-driven ending: the generator determines each scene ending from its prompt.
+- Screenshot Handoff: capture a clear frame near the end of a generated scene and upload it as the next scene First Frame.
+- First Frame images are stored locally with the project; upload limit is 8 MB per image.
+- Video generation and screenshot capture remain manual in external tools; PROMOVA does not extract frames automatically.
 
 ## V2.0.0 — Hybrid AI Director 2.0
 - Scene-by-scene video prompt mode: each storyboard scene receives its own standalone production prompt.
