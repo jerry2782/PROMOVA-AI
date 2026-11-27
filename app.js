@@ -276,9 +276,8 @@ function renderPipeline(){
   const framesApproved=!!(project.framePlan?.firstImage&&project.framePlan?.lastImage&&project.framePlan?.firstApproved&&project.framePlan?.lastApproved);
   const complete=stage.id==="image"?framesApproved:stage.id==="video"?(framesApproved&&project.pipeline[stage.id]===true):project.pipeline[stage.id]===true;
   const prompt=pipelinePrompt(project,stage);
-  const framesApproved=!!(project.framePlan?.firstApproved&&project.framePlan?.lastApproved);
   const unavailable=(prompt.startsWith("Materi ")&&prompt.includes("belum ditemukan"))||(stage.id==="video"&&!framesApproved);
-  return '<article class="pipeline-stage '+(complete?"is-complete":"")+'"><div class="pipeline-stage-top"><span class="step-number">'+String(index+1).padStart(2,"0")+'</span><div class="pipeline-stage-copy"><b>'+stage.title+'</b><small>'+stage.description+'</small></div><span class="pipeline-state">'+(complete?"Selesai":"Belum")+'</span></div><div class="pipeline-stage-actions"><button type="button" class="secondary-btn" data-pipeline-prepare="'+stage.id+'" '+(unavailable?"disabled":"")+'>Siapkan tahap ↗</button><label class="pipeline-done"><input type="checkbox" data-pipeline-done="'+stage.id+'" '+(complete?"checked":"")+'> Tandai selesai</label></div>'+(stage.id==="video"&&!framesApproved?'<p class="helper">Selesaikan dan setujui First & Last Frame sebelum menyiapkan prompt video.</p>':unavailable?'<p class="helper">Prompt tahap ini belum tersedia pada proyek. Buat Content Production Pack terlebih dahulu.</p>':"")+'</article>';
+  return '<article class="pipeline-stage '+(complete?"is-complete":"")+'"><div class="pipeline-stage-top"><span class="step-number">'+String(index+1).padStart(2,"0")+'</span><div class="pipeline-stage-copy"><b>'+stage.title+'</b><small>'+stage.description+'</small></div><span class="pipeline-state">'+(complete?"Selesai":"Belum")+'</span></div><div class="pipeline-stage-actions"><button type="button" class="secondary-btn" data-pipeline-prepare="'+stage.id+'" '+(unavailable?"disabled":"")+'>Siapkan tahap ↗</button><label class="pipeline-done"><input type="checkbox" data-pipeline-done="'+stage.id+'" '+(complete?"checked":"")+' '+((stage.id==="image"||stage.id==="video")&&!framesApproved?"disabled":"")+'> Tandai selesai</label></div>'+(stage.id==="video"&&!framesApproved?'<p class="helper">Selesaikan dan setujui First & Last Frame sebelum menyiapkan prompt video.</p>':unavailable?'<p class="helper">Prompt tahap ini belum tersedia pada proyek. Buat Content Production Pack terlebih dahulu.</p>':"")+'</article>';
  }).join("");
 }
 document.getElementById("pipeline-project").addEventListener("change",renderPipeline);
@@ -396,6 +395,7 @@ document.getElementById("frame-video-prepare").addEventListener("click",()=>{
  if(!p||!(p.framePlan?.firstApproved&&p.framePlan?.lastApproved)){toast("Kedua frame wajib disetujui terlebih dahulu");return}
  const base=extractExternalPrompt(p,"video");
  const continuity="\n\nFIRST/LAST FRAME CONTINUITY REQUIREMENTS\nUse the attached approved FIRST FRAME image as the exact opening frame and the approved LAST FRAME image as the exact final frame. Animate a coherent, physically plausible transition between them. Preserve product identity, character identity, wardrobe, location, lighting, color grade and screen direction. Do not redesign the product or introduce new objects. Respect the visual endpoints; do not alter either approved frame. The user will attach both approved frame images manually in the external video service.";
+ refreshExternalProjects();
  document.getElementById("external-project").value=p.id;
  document.getElementById("external-kind").value="video";
  document.getElementById("external-category").value="video";refreshExternalProviders();
