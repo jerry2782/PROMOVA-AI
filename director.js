@@ -12,20 +12,20 @@
   {title:"Lifestyle / Demonstration",visual:"Tempatkan produk dalam konteks penggunaan sehari-hari yang masuk akal dan sesuai fakta.",action:"Perlihatkan interaksi sederhana dan realistis antara karakter dan produk.",dialogue:"",onScreenText:"",camera:"Natural medium shot with subtle camera movement",lighting:"Consistent location-motivated lighting",transition:"Cut"},
   {title:"Closing & CTA",visual:"Akhiri dengan komposisi bersih, produk tetap terlihat jelas, dan ruang untuk CTA.",action:"Karakter memberi ajakan yang wajar tanpa klaim berlebihan.",dialogue:"",onScreenText:"Cek produknya sekarang",camera:"Medium close-up, gentle push-in, hold final composition",lighting:"Match previous scenes",transition:"End hold"}
  ];
- function getProject(){return (window.projects||[]).find(p=>p.id===projectSelect.value)}
+ function getProject(){return ((typeof projects!=="undefined"?projects:[])).find(p=>p.id===projectSelect.value)}
  function projectOptions(){
   const keep=projectSelect.value;
-  const list=(window.projects||[]).filter(p=>p.type==="Content Production Pack");
+  const list=((typeof projects!=="undefined"?projects:[])).filter(p=>p.type==="Content Production Pack");
   projectSelect.innerHTML='<option value="">Pilih proyek Content Production...</option>'+list.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.title)+'</option>').join("");
   if(list.some(p=>p.id===keep))projectSelect.value=keep;
  }
  function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
  function assignedIds(p){return p?.directorPlan?.characterIds||p?.characterIds||[]}
- function selectedCharacters(p){const ids=assignedIds(p);return (window.characters||[]).filter(c=>ids.includes(c.id))}
+ function selectedCharacters(p){const ids=assignedIds(p);return ((typeof characters!=="undefined"?characters:[])).filter(c=>ids.includes(c.id))}
  function renderCharacters(p){
   const root=$("director-character-list");
   if(!p){root.innerHTML='<p class="helper">Pilih proyek untuk melihat karakter yang tersedia.</p>';return}
-  const all=window.characters||[];
+  const all=(typeof characters!=="undefined"?characters:[]);
   if(!all.length){root.innerHTML='<div class="director-empty">Character Library masih kosong. Buat karakter melalui Character DNA Studio terlebih dahulu.</div>';return}
   const chosen=assignedIds(p);
   root.innerHTML=all.map(c=>'<label class="director-character-option"><input type="checkbox" data-director-character="'+esc(c.id)+'" '+(chosen.includes(c.id)?"checked":"")+'><img src="'+(c.photoData||c.masterSheetData||"")+'" alt="" '+(!(c.photoData||c.masterSheetData)?'class="hidden"':"")+'><span><b>'+esc(c.name)+'</b><small>'+esc(c.role||"Karakter")+' · '+esc(c.age||"Usia tidak ditentukan")+' · '+(c.masterSheetData?"Master Sheet tersedia":"Master Sheet belum ada")+'</small></span></label>').join("");
@@ -36,8 +36,8 @@
  }
  function getSelectedIds(){return [...document.querySelectorAll('[data-director-character]:checked')].map(x=>x.dataset.directorCharacter)}
  function dnaFor(ids){
-  return (window.characters||[]).filter(c=>ids.includes(c.id)).map(c=>{
-   const dna=typeof window.characterDNAText==="function"?window.characterDNAText(c):[
+  return ((typeof characters!=="undefined"?characters:[])).filter(c=>ids.includes(c.id)).map(c=>{
+   const dna=typeof characterDNAText==="function"?characterDNAText(c):[
     "CHARACTER ID: "+c.id,"Character name: "+c.name,"Role: "+(c.role||"Not specified"),"Age: "+(c.age||"Not specified"),
     "Permanent physical identity: "+(c.appearance||"Use attached approved references."),
     "PRIMARY MASTER CHARACTER SHEET: "+(c.masterSheetData?"Attached; canonical identity reference.":"Not uploaded."),
