@@ -73,3 +73,23 @@ input:focus,textarea:focus,select:focus{border-color:#a879ed;box-shadow:0 0 0 3p
 .gallery-empty b{font-size:12px;color:var(--ink)}.gallery-empty p{font-size:10px;color:var(--muted);margin:5px 0 13px}
 @media(min-width:700px){.creation-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.creation-open{height:190px}}
 @media(max-width:390px){.creation-open{height:140px}.creation-gallery{gap:9px}}
+
+/* PROMOVA AI V1.2.1 - visual creation gallery and category filters */
+.gallery-toolbar{display:flex;gap:8px;overflow-x:auto;padding:2px 0 9px;margin:12px 0 5px;scrollbar-width:none}
+.gallery-toolbar::-webkit-scrollbar{display:none}
+.gallery-filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;padding:8px 15px;background:var(--white);color:var(--muted);font-size:10px;font-weight:650}
+.gallery-filter.active{border-color:#9c68e5;background:linear-gradient(110deg,#48256d,#38204f);color:#f6eaff;box-shadow:0 4px 15px #9333ea22}
+.creation-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.creation-card{box-shadow:0 9px 24px #0002}
+.creation-open{height:auto;aspect-ratio:4/4.6}
+.creation-open>img{object-fit:cover;transition:transform .25s ease}
+.creation-card:active .creation-open>img{transform:scale(1.025)}
+.creation-art{position:absolute;inset:0}
+.creation-overlay{padding:34px 12px 11px}
+.creation-overlay b{font-size:12px}
+.creation-overlay small{font-size:10px}
+.creation-meta{padding:10px 12px;font-size:10px}
+.creation-view{font-size:11px}
+.gallery-empty{min-height:175px;justify-content:center}
+@media(min-width:700px){.creation-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.creation-open{height:auto;aspect-ratio:4/4.4}}
+@media(max-width:390px){.creation-gallery{gap:9px}.creation-open{height:auto;aspect-ratio:4/4.8}}
