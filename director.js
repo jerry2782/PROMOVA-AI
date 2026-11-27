@@ -50,16 +50,16 @@
  function evenlyTimed(total,count){const base=Math.floor(total/count),rem=total%count;return Array.from({length:count},(_,i)=>base+(i<rem?1:0))}
  function makeDraft(){
   const p=getProject();if(!p){toast("Pilih proyek terlebih dahulu");return}
-  const count=Number($("director-scene-count").value),dur=Number($("director-duration").value),times=evenlyTimed(dur,count);
+  const dur=Math.max(8,Math.min(300,Number($("director-duration").value)||15));const count=Math.max(1,Math.min(dur,100,Number($("director-scene-count").value)||1));$("director-duration").value=String(dur);$("director-scene-count").value=String(count);const times=evenlyTimed(dur,count);
   sceneDraft=Array.from({length:count},(_,i)=>{
-   const d=defaults[Math.min(i,defaults.length-1)];
+   const d=defaults[i]||{title:"Scene "+(i+1),visual:"Tentukan visual dan komposisi adegan ini.",action:"Jelaskan aksi karakter atau objek secara natural.",dialogue:"",onScreenText:"",camera:"Medium shot, smooth controlled movement",lighting:"Consistent soft commercial lighting",transition:"Cut"};
    return {id:"scene-"+(i+1)+"-"+Date.now(),title:d.title, duration:times[i],visual:d.visual,action:d.action,dialogue:d.dialogue,onScreenText:d.onScreenText,camera:d.camera,lighting:d.lighting,transition:d.transition};
   });
   renderScenes();$("director-ai-prompt").value=buildDirectorPrompt(p);toast("Draft storyboard dibuat. Edit setiap adegan sesuai kebutuhan.");
  }
  function buildDirectorPrompt(p){
   const f=projectFacts(p),ids=getSelectedIds(),dna=dnaFor(ids);
-  const d=$("director-duration").value,count=$("director-scene-count").value,style=$("director-style").value,ratio=$("director-ratio").value;
+  const d=$("director-duration").value,count=sceneDraft.length||$("director-scene-count").value,style=$("director-style").value,ratio=$("director-ratio").value;
   return [
    "You are a senior commercial film director, storyboard artist and ethical short-form advertising producer.",
    "Create a production-ready scene-by-scene storyboard for the project below. Use ONLY supplied facts. Never invent specifications, prices, discounts, ratings, awards, availability, certifications, results, testimonials or performance claims. Mark missing information [NEED CONFIRMATION].",
@@ -99,8 +99,8 @@
   const f=projectFacts(p);
   $("director-project-summary").innerHTML='<span>✦</span><div><b>'+esc(p.title)+'</b><small>'+esc(f.platform)+' · '+esc(f.style)+' · '+(f.hasProductRef?"Referensi produk tersimpan":"Tidak ada foto referensi produk")+'</small></div>';
   if(p.directorPlan){
-   $("director-duration").value=String(p.directorPlan.duration||30);$("director-style").value=p.directorPlan.style||$("director-style").value;$("director-ratio").value=p.directorPlan.ratio||"Vertical 9:16";
-   $("director-scene-count").value=String(p.directorPlan.sceneCount||p.directorPlan.scenes?.length||4);
+   $("director-duration").value=String(Math.max(8,p.directorPlan.duration||30));$("director-style").value=p.directorPlan.style||$("director-style").value;$("director-ratio").value=p.directorPlan.ratio||"Vertical 9:16";
+   $("director-scene-count").value=String(p.directorPlan.sceneCount||p.directorPlan.scenes?.length||1);
    sceneDraft=(p.directorPlan.scenes||[]).map(s=>({...s}));
   }else{sceneDraft=[]}
   renderCharacters(p);renderScenes();
@@ -112,7 +112,7 @@
   const scenes=Array.isArray(data)?data:data.scenes;
   if(!Array.isArray(scenes)||!scenes.length){toast('Format harus berupa objek JSON dengan array "scenes".');return}
   sceneDraft=scenes.map((s,i)=>({id:"import-"+Date.now()+"-"+i,title:s.title||"Scene "+(i+1),duration:Number(s.duration_seconds??s.duration??5),visual:s.visual_description||s.visual||"",action:s.character_action||s.action||"",dialogue:s.dialogue_or_voiceover||s.dialogue||s.voiceover||"",onScreenText:s.on_screen_text||s.onScreenText||"",camera:s.camera||"",lighting:s.lighting||"",transition:s.transition||"Cut"}));
-  $("director-scene-count").value=String(sceneDraft.length);renderScenes();toast(scenes.length+" adegan berhasil diimpor. Periksa dan edit sebelum menyimpan.");
+  $("director-scene-count").value=String(sceneDraft.length);const importedTotal=sceneDraft.reduce((n,s)=>n+(Number(s.duration)||0),0);$("director-duration").value=String(Math.max(8,importedTotal));renderScenes();toast(scenes.length+" adegan berhasil diimpor. Periksa dan edit sebelum menyimpan.");
  }
  function makeVideoPrompt(p){
   readSceneInputs();
@@ -135,8 +135,8 @@
  $("director-open-ai").addEventListener("click",()=>{if(!$("director-ai-prompt").value.trim()){toast("Susun prompt AI Director terlebih dahulu");return}window.open("https://gemini.google.com/app","_blank","noopener,noreferrer");toast("Google Gemini dibuka. Tempel prompt dan minta output JSON.")});
  $("director-import-ai").addEventListener("click",importStoryboard);
  $("director-scenes").addEventListener("input",e=>{const card=e.target.closest(".director-scene");if(!card)return;const i=Number(card.dataset.sceneIndex),key=e.target.dataset.sceneField;if(sceneDraft[i]&&key){sceneDraft[i][key]=key==="duration"?Math.max(1,Number(e.target.value)||1):e.target.value;const title=card.querySelector(".director-scene-head b");if(title&&key==="title")title.textContent="SCENE "+String(i+1).padStart(2,"0")+" — "+sceneDraft[i].title}});
- $("director-scenes").addEventListener("click",e=>{const b=e.target.closest("[data-director-delete]");if(!b)return;readSceneInputs();sceneDraft.splice(Number(b.dataset.directorDelete),1);renderScenes()});
- $("director-add-scene").addEventListener("click",()=>{readSceneInputs();sceneDraft.push({id:"scene-"+Date.now(),title:"New Scene",duration:5,visual:"",action:"",dialogue:"",onScreenText:"",camera:"",lighting:"",transition:"Cut"});renderScenes()});
+ $("director-scenes").addEventListener("click",e=>{const b=e.target.closest("[data-director-delete]");if(!b)return;readSceneInputs();sceneDraft.splice(Number(b.dataset.directorDelete),1);$("director-scene-count").value=String(Math.max(1,sceneDraft.length));renderScenes()});
+ $("director-add-scene").addEventListener("click",()=>{readSceneInputs();sceneDraft.push({id:"scene-"+Date.now(),title:"Scene "+(sceneDraft.length+1),duration:1,visual:"",action:"",dialogue:"",onScreenText:"",camera:"",lighting:"",transition:"Cut"});$("director-scene-count").value=String(sceneDraft.length);renderScenes()});
  $("director-save").addEventListener("click",()=>savePlan(true));
  $("director-prepare-video").addEventListener("click",()=>{
   const p=savePlan(false);if(!p)return;
