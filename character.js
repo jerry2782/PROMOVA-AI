@@ -139,3 +139,6 @@ const originalLoadFrameProject=loadFrameProject;
 loadFrameProject=function(){originalLoadFrameProject();renderFrameCharacterAssignments()};
 document.getElementById("frame-project").addEventListener("change",renderFrameCharacterAssignments);
 renderCharacterLibrary();refreshCharacterProjectOptions();ensureFrameCharacterBox();renderFrameCharacterAssignments();refreshCharacterAnalysisControls();
+
+/* Shared Character Library bridge for other PROMOVA studios. */
+window.PROMOVACharacterStore={getAll:()=>{try{return loadCharacters()}catch{return[]}},getById:id=>{try{return loadCharacters().find(c=>String(c.id)===String(id))||null}catch{return null}},refresh:()=>{try{characters=loadCharacters();renderCharacterLibrary();refreshCharacterProjectOptions();return characters}catch{return[]}}};
