@@ -90,6 +90,24 @@ Continue the same luxurious dark cinema lobby and golden wall architecture from 
 The presenter smiles, makes one welcoming open-palm gesture toward the empty central panel, then holds still. Golden light gently illuminates the panel. Camera remains symmetrical and stable; use a very subtle dolly-in only at the beginning, then stop. Hold the clean empty panel for the final 3 seconds so the original logo and CTA can be composited clearly.
 LOGO OVERLAY IN EDITOR: Place the exact original uploaded PNG logo on the central panel using perspective tracking. Preserve all original lettering and ornaments without modification. Add this exact CTA as editable text overlay: "${cta}". Never ask the video model to generate the logo or CTA.
 ${negative}`;
+const scenePrompts=p.map((movie,i)=>`VIDEO GENERATION PROMPT — PRESENTER SHOWCASE ${String(i+1).padStart(2,"0")}: ${movie.title}
+DURATION: EXACTLY 10 seconds. FORMAT: ${ratio}. ONE CONTINUOUS SHOT.
+${identity}
+${continuity}
+${layout}
+${camera}
+${lighting}
+${movement}
+FILM CONTEXT: This clip promotes "${movie.title}" at ${brand}. Do not generate the poster, title, date, showtimes, cinema logo, captions or readable text.
+POSTER OVERLAY: Keep the LEFT poster zone completely EMPTY. In post-production, place the exact uploaded official poster image unchanged. Preserve original artwork, credits, logos, typography, colors and proportions. Do not redraw, recreate or modify it.
+Add these as separate editable overlays in the video editor:
+OFFICIAL FILM TITLE: "${movie.title}"
+DATE: "${dateText(movie.date)}"
+SHOWTIMES: "${movie.times||"[JAM TAYANG BELUM DIISI]"}"
+CINEMA: "${brand}"
+${movie.note?"ADDITIONAL SCHEDULE NOTE: "+movie.note:""}
+END POSE: Hold a friendly open-palm presentation pose beside the empty poster zone.
+${negative}`);
 const blocks=[["OPENING — BACKGROUND ONLY",openPrompt],...scenePrompts.map((v,i)=>["PRESENTER SHOWCASE "+String(i+1).padStart(2,"0")+" — "+p[i].title,v]),["CLOSING — PRESENTER BACKGROUND",closePrompt]];
 const all=blocks.map(x=>x[0]+"\n\n"+x[1]).join("\n\n====================\n\n");
 const sched=p.map(x=>({title:x.title,date:dateText(x.date),times:x.times||"[JAM TAYANG BELUM DIISI]",note:x.note}));
