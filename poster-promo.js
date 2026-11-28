@@ -95,5 +95,21 @@ $("mp-output").dataset.all=all;$("mp-output").dataset.blocks=JSON.stringify(bloc
 }
 $("mp-generate").addEventListener("click",generate);
 $("mp-output").addEventListener("click",e=>{const b=e.target.closest("[data-mp-copy]");if(b){const a=JSON.parse($("mp-output").dataset.blocks||"[]");copyText(a[+b.dataset.mpCopy]?.[1]||"")}if(e.target.id==="mp-copy-all")copyText($("mp-output").dataset.all||"");if(e.target.id==="mp-save"){const d=window.__mpDraft;if(!d)return;try{const a=JSON.parse(localStorage.getItem("promova_ai_projects_v1")||"[]");a.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),title:"Movie Promo — "+d.brand,type:"Movie Poster Promo Pack",createdAt:new Date().toISOString(),content:d.prompts.map(x=>x[0]+"\n"+x[1]).join("\n\n"),moviePromo:d});localStorage.setItem("promova_ai_projects_v1",JSON.stringify(a));if(typeof renderProjects==="function")renderProjects();toast("Proyek Movie Poster Promo tersimpan.")}catch(x){toast("Penyimpanan gagal. Kurangi jumlah atau ukuran gambar.")}}});
-addPoster();source("library");refreshChars();
+function initMoviePromoCharacterUI(){
+try{
+if(window.PROMOVACharacterStore&&typeof window.PROMOVACharacterStore.refresh==="function")window.PROMOVACharacterStore.refresh();
+source("library");
+refreshChars();
+const status=$("mp-library-status");
+if(status&&status.textContent==="Memeriksa karakter tersimpan…")status.textContent="Pemeriksaan selesai. Jika daftar kosong, Character DNA Studio belum mengirim data ke modul ini.";
+}catch(error){
+console.error("Movie Promo initialization error:",error);
+const status=$("mp-library-status");
+if(status)status.textContent="Gagal memuat Character Library: "+(error?.message||"kesalahan JavaScript");
+}
+}
+try{addPoster();}catch(error){console.error("Movie Promo poster initialization error:",error);}
+initMoviePromoCharacterUI();
+window.addEventListener("load",initMoviePromoCharacterUI,{once:true});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)initMoviePromoCharacterUI();});
 })();
